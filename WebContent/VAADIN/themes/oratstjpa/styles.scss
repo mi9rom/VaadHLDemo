@@ -1,0 +1,24 @@
+@import "designs.scss";
+@import "addons.scss";
+@import "oratstjpa.scss";
+
+/* This file prefixes all rules with the theme name to avoid causing conflicts with other themes. */
+/* The actual styles should be defined in oratstjpa.scss */
+.oratstjpa {
+  @include addons;
+  @include oratstjpa;
+}
+.backgr2 {
+ @include addons;
+  @include oratstjpa;
+  background: white;
+}
+
+.solidOut{
+  @include addons;
+  @include oratstjpa;
+ 
+  border: 1px solid #ddd;
+  
+  
+}
