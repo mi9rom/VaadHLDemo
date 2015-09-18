@@ -8,17 +8,14 @@
   @include addons;
   @include oratstjpa;
 }
-.backgr2 {
- @include addons;
-  @include oratstjpa;
+.backgrWhite {
+  @extend oratstjpa;
   background: white;
+  border: 1px solid #ddd;
 }
 
 .solidOut{
-  @include addons;
-  @include oratstjpa;
- 
+  @extend oratstjpa;
   border: 1px solid #ddd;
-  
-  
 }
+

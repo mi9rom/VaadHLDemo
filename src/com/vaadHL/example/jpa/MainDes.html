@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
  <head>
-  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;PAPER_WIDTH&quot;:1411,&quot;PAPER_HEIGHT&quot;:997,&quot;PAPER_SCROLL_LEFT&quot;:1667,&quot;PAPER_SCROLL_TOP&quot;:2190,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;oratstjpa&quot;}">
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;PAPER_WIDTH&quot;:1411,&quot;PAPER_HEIGHT&quot;:997,&quot;PAPER_SCROLL_LEFT&quot;:1723,&quot;PAPER_SCROLL_TOP&quot;:2349,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;oratstjpa&quot;}">
  </head> 
  <body> 
   <v-vertical-layout> 
@@ -9,8 +9,8 @@
     <v-label size-auto="true" :center=""> 
      <font size="6"><b>VaadHL framework demo </b></font> 
     </v-label> 
-    <v-horizontal-layout style-name="backgr2" spacing="true" margin="true" :center=""> 
-     <v-vertical-layout spacing="true" width="320px"> 
+    <v-css-layout primary-style-name="v-csslayout-inline" :center=""> 
+     <v-vertical-layout style-name="backgrWhite" spacing="true" width="397px" margin="true"> 
       <v-label width-auto="true" height="24px" _id="_b_A__b_4" :center=""> 
        <b>List window launch type</b> 
       </v-label> 
@@ -36,14 +36,14 @@
        <v-combo-box caption="Double click action:" item-caption-mode="id" width-full="true" _id="cbDoubleClickChM"></v-combo-box> 
       </v-vertical-layout> 
      </v-vertical-layout> 
-     <v-vertical-layout size-auto="true"> 
+     <v-vertical-layout style-name="backgrWhite" size-auto="true" margin="true"> 
       <v-label width-auto="true" height="24px" _id="_b_A__b_3" :center=""> 
        <b>List window permissions</b> 
       </v-label> 
       <v-option-group invalid-allowed="false" item-caption-mode="id" _id="ogPermLW" :center=""></v-option-group> 
       <v-text-area caption="Returned selection:" width="271px" _id="taChoosed"></v-text-area> 
      </v-vertical-layout> 
-     <v-vertical-layout spacing="true" size-auto="true"> 
+     <v-vertical-layout style-name="backgrWhite" spacing="true" size-auto="true" margin="true"> 
       <v-label size-auto="true" _id="_b_A__b_" :center=""> 
        <b>Form window customization</b> 
       </v-label> 
@@ -55,13 +55,13 @@
       <v-combo-box caption="When closing the form window using &quot;Close&quot; button or x:" invalid-allowed="false" item-caption-mode="id" width="464px" _id="cbAutoSaveDiscard"></v-combo-box> 
       <v-combo-box caption="Closing method:" item-caption-mode="id" width="464px" _id="cbClosingMethod"></v-combo-box> 
      </v-vertical-layout> 
-     <v-vertical-layout size-auto="true"> 
+     <v-vertical-layout style-name="backgrWhite" size-auto="true" margin="true"> 
       <v-label width-auto="true" height="24px" _id="_b_A__b_2" :center=""> 
        <b>Form window permissions</b> 
       </v-label> 
       <v-option-group invalid-allowed="false" item-caption-mode="id" _id="ogPermFW" :center=""></v-option-group> 
      </v-vertical-layout> 
-    </v-horizontal-layout> 
+    </v-css-layout> 
     <v-horizontal-layout spacing="true" margin="true" :middle="" :center=""> 
      <v-button plain-text="" _id="btRunTest" :middle="" :right="">
        Run 
