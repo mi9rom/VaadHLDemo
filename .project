@@ -3,7 +3,6 @@
 	<name>OraTstJPA</name>
 	<comment></comment>
 	<projects>
-		<project>VaadHL</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

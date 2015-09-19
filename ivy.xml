@@ -43,16 +43,24 @@
 		<!-- Compiler for custom widget sets. Should not be deployed -->
 		<dependency org="com.vaadin" name="vaadin-client-compiler"
 			rev="&vaadin.version;" conf="widgetset-compile->default" />
-		
-		<!--  JPA  lazyquerycontainer -->
-		<dependency   org="org.vaadin.addons.lazyquerycontainer"    name="vaadin-lazyquerycontainer"    rev="7.4.0.1" /> 	
-		
+
+        <!-- VadHL framework -->
+		<dependency   org="org.vaadin.addons"   name="vaadhl" rev="1.0.13" />
+				
+		<!--  Debug   
+		<dependency org="org.vaadin.addons.lazyquerycontainer"  name="vaadin-lazyquerycontainer" rev="7.4.0.1" />
+		 
 		<dependency   org="org.vaadin.addon"    name="confirmdialog"    rev="2.1.2" />
+		-->
 		
-		<!--  postgresql 
-		<dependency org="org.postgresql" name="postgresql" rev="9.3-1103-jdbc41"/> -->
+		<!--
+		  postgresql 
+		<dependency org="org.postgresql" name="postgresql" rev="9.3-1103-jdbc41"/> 
+		-->
+		
 
 		
+   
   </dependencies>
 		
 </ivy-module>
