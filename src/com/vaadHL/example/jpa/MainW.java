@@ -59,7 +59,7 @@ public class MainW extends MainDes {
 	public MainW() {
 		super();
 		em = ENTITY_MANAGER_FACTORY.createEntityManager();
-		String[] permisions = { "Open", "Edit", "Create", "Delete" };
+		String[] permisions = { "Open", "Edit", "Create", "Delete" , "Generic perm. test" };
 
 		// ========== list window launch mode =============
 

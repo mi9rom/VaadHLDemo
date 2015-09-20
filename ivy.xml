@@ -45,7 +45,7 @@
 			rev="&vaadin.version;" conf="widgetset-compile->default" />
 
         <!-- VadHL framework -->
-		<dependency   org="org.vaadin.addons"   name="vaadhl" rev="1.0.13" />
+		<dependency   org="org.vaadin.addons"   name="vaadhl" rev="1.0.14" />
 				
 		<!--  Debug   
 		<dependency org="org.vaadin.addons.lazyquerycontainer"  name="vaadin-lazyquerycontainer" rev="7.4.0.1" />

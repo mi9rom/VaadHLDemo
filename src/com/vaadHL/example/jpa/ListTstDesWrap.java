@@ -32,16 +32,20 @@ public class ListTstDesWrap extends ListTstDes {
 	public com.vaadin.ui.Table getTable() {
 		return table;
 	}
-	
+
 	public com.vaadin.ui.TextField getTfFilter1() {
 		return tfFilter1;
 	}
-	
+
 	public com.vaadin.ui.TextField getTfDetail() {
 		return tfDetail;
 	}
-	
+
 	public ComboBox getCbSearchBy() {
 		return cbSearchBy;
+	}
+
+	public com.vaadin.ui.Button getFbtGenPerm() {
+		return btGenPerm;
 	}
 }

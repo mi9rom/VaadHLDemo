@@ -43,6 +43,8 @@ import com.vaadin.data.util.filter.Like;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
@@ -56,6 +58,7 @@ public class ListTst extends LEMWindow {
 	private LazyEntityContainer<Customer> container;
 	private TextField tfDetail;
 	private ComboBox cbSearchBy;
+	private Button btGenPerm;
 	private CustomizeFWin customizeFWin;
 	private IWinPermChecker permFW;
 
@@ -152,6 +155,18 @@ public class ListTst extends LEMWindow {
 				 * instead returns the last value after exiting the field
 				 */
 				setFilter("lastName", event.getText());
+			}
+		});
+		
+		btGenPerm.addClickListener(new com.vaadin.ui.Button.ClickListener() {
+			
+			private static final long serialVersionUID = 920725430798619475L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+				getMsgs().showInfo(ListTst.this.permFW.canDo(getWinId(), "CANDO")?"Allowed":"Denied");	
+				
 			}
 		});
 	}
@@ -274,6 +289,7 @@ public class ListTst extends LEMWindow {
 		filter1 = ml.getTfFilter1();
 		tfDetail = ml.getTfDetail();
 		cbSearchBy = ml.getCbSearchBy();
+		btGenPerm = ml.getFbtGenPerm();
 		// ---------------------------------------------------
 	}
 
