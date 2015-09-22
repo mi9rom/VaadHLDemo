@@ -16,7 +16,6 @@
 
 package com.vaadHL.example.jpa;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,25 +23,33 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import com.vaadHL.test.tstPerm.TestPermChecker;
-import com.vaadHL.test.tstPerm.WinPermCheckerBin;
+import com.vaadHL.example.base.MyActionsIds;
+import com.vaadHL.test.tstPerm.TestPermCheckerB;
+import com.vaadHL.test.tstPerm.TestPermCheckerB.PermItem;
 import com.vaadHL.utl.helper.ComponentHelper;
 import com.vaadHL.utl.helper.ItemHelper;
 import com.vaadHL.window.base.BaseListWindow.ChoosingMode;
 import com.vaadHL.window.base.ICustomizeEditWin.AutoSaveDiscard;
-import com.vaadHL.window.base.ICustomizeListWindow;
 import com.vaadHL.window.base.ICustomizeListWindow.DoubleClickAc;
 import com.vaadHL.window.base.IListSelectionAction;
 import com.vaadHL.window.base.LWCustomize;
 import com.vaadHL.window.base.LWCustomizeLM;
+import com.vaadin.data.Container;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver;
+import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.DefaultFieldFactory;
+import com.vaadin.ui.Field;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.UI;
 
 public class MainW extends MainDes {
@@ -55,15 +62,16 @@ public class MainW extends MainDes {
 	private CustomizeFWin customizeFWin;
 	ChoosingMode listChoosingMode;
 	boolean listReadOnly;
+	private TestPermCheckerB permissions;
 
 	public MainW() {
 		super();
 		em = ENTITY_MANAGER_FACTORY.createEntityManager();
-		String[] permisions = { "Open", "Edit", "Create", "Delete" , "Generic perm. test" };
 
 		// ========== list window launch mode =============
 
 		chkReadOnly.addValueChangeListener(new ValueChangeListener() {
+		private static final long serialVersionUID = -5304522804592982630L;
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
@@ -73,7 +81,7 @@ public class MainW extends MainDes {
 		});
 
 		String[] choosingModeS = { "no choose", "single choose",
-				"multiple choose"};
+				"multiple choose" };
 		ComponentHelper.populateWIds(cbChoosingMode, choosingModeS);
 		cbChoosingMode.setNullSelectionAllowed(false);
 		cbChoosingMode.addValueChangeListener(new ValueChangeListener() {
@@ -100,7 +108,8 @@ public class MainW extends MainDes {
 		String[] doubleClickModeS = { "open the form in the details mode",
 				"open the form in the view mode",
 				"open the form in the edit mode", "delete the clicked record",
-				"create a new record", "choose the selected record(s)", "do nothing" };
+				"create a new record", "choose the selected record(s)",
+				"do nothing" };
 
 		// no-choose mode
 		final LWCustomizeLM customizeLWNoCh = new LWCustomizeLM();
@@ -170,27 +179,8 @@ public class MainW extends MainDes {
 		final LWCustomize customizeLW = new LWCustomize(customizeLWChMo,
 				customizeLWNoCh);
 
-		// ========== list window permissions =============
-		final WinPermCheckerBin winLPermChecker = new WinPermCheckerBin();
-		ComponentHelper.populateWIds(ogPermLW, permisions);
-		ogPermLW.setMultiSelect(true);
-		ogPermLW.setValue(new HashSet<Integer>(Arrays.asList(0, 1, 2, 3)));
-		winLPermChecker.fromSet((Set<Integer>) ogPermLW.getValue());
-		ogPermLW.addValueChangeListener(new ValueChangeListener() {
-
-			private static final long serialVersionUID = -8796909775190248110L;
-
-			@Override
-			public void valueChange(ValueChangeEvent event) {
-				Property<?> p = event.getProperty();
-				Set<Integer> s = (Set<Integer>) p.getValue();
-				winLPermChecker.fromSet(s);
-			}
-		});
-
 		// ========== form window customization =============
 		customizeFWin = new CustomizeFWin();
-		final WinPermCheckerBin winFPermChecker = new WinPermCheckerBin();
 		final BeanItem<CustomizeFWin> customizeFWinBI = new BeanItem<CustomizeFWin>(
 				customizeFWin);
 		chkAskCreate.setPropertyDataSource(customizeFWinBI
@@ -205,10 +195,10 @@ public class MainW extends MainDes {
 				.getItemProperty("prevNextFunc"));
 
 		String[] autoSaveDiscard = {
-				"ask to save or discard changes and close the window",
-				"save changes without asking and close the window",
-				"discard changes without asking and close the window",
-				"show the message but do not close the window" };
+				"ask to save or discard changes and close",
+				"save changes without asking and close",
+				"discard changes without asking and close",
+				"show the message but do not close" };
 		ComponentHelper.populateWIds(cbAutoSaveDiscard, autoSaveDiscard);
 		cbAutoSaveDiscard.setNullSelectionAllowed(false);
 		cbAutoSaveDiscard.setValue(0);
@@ -239,32 +229,86 @@ public class MainW extends MainDes {
 			}
 		});
 
-		// ========== form window permissions =============
-		ComponentHelper.populateWIds(ogPermFW, permisions);
-		ogPermFW.setMultiSelect(true);
-		ogPermFW.setValue(new HashSet<Integer>(Arrays.asList(0, 1, 2, 3)));
-		winFPermChecker.fromSet((Set<Integer>) ogPermLW.getValue());
-		ogPermFW.addValueChangeListener(new ValueChangeListener() {
+		// ========== mock permissions =============
+		permissions = new TestPermCheckerB();
+		permissions.put("L001",MyActionsIds.MOCK_ID,false);
+		
+		BeanContainer<String, PermItem> permContainer = new BeanContainer<String, PermItem>(
+				PermItem.class);
+		permContainer
+				.setBeanIdResolver(new BeanIdResolver<String, TestPermCheckerB.PermItem>() {
+					private static final long serialVersionUID = -2858748109465649052L;
 
-			private static final long serialVersionUID = 6595195704541400511L;
+					@Override
+					public String getIdForBean(PermItem bean) {
+						return bean.getWinId()
+								+ Integer.toString(bean.getPermId());
+					}
+				});
+		permContainer.addAll(permissions.getContainer().values());
+
+		tPerm.setContainerDataSource(permContainer);
+		tPerm.setPageLength(15);
+
+		// immediately
+		tPerm.setEditable(true);
+		tPerm.setSelectable(false);
+		tPerm.setColumnReorderingAllowed(true);
+		tPerm.setColumnCollapsingAllowed(true);
+
+		tPerm.addGeneratedColumn("permission", new ColumnGenerator() {
+		private static final long serialVersionUID = 8174249667866723293L;
 
 			@Override
-			public void valueChange(ValueChangeEvent event) {
-				Property<?> p = event.getProperty();
-				@SuppressWarnings("unchecked")
-				Set<Integer> s = (Set<Integer>) p.getValue();
-				winFPermChecker.fromSet(s);
+			public Object generateCell(Table source, Object itemId,
+					Object columnId) {
+				Item itm = source.getItem(itemId);
+				int acId = (int) itm.getItemProperty("permId").getValue();
+
+				return MyActionsIds.getName(acId);
+
 			}
 		});
 
-		// ========== mock permission setting =============
-		final TestPermChecker testPermChecker = new TestPermChecker();
-		testPermChecker.add("L001", winLPermChecker);
-		testPermChecker.add("M001", winFPermChecker);
+		tPerm.addGeneratedColumn("winIdShow", new ColumnGenerator() {
+			private static final long serialVersionUID = 7789570007862946545L;
+
+			@Override
+			public Object generateCell(Table source, Object itemId,
+					Object columnId) {
+				Item itm = source.getItem(itemId);
+				String v = (String) itm.getItemProperty("winId").getValue();
+
+				return v;
+
+			}
+		});
+
+		tPerm.setTableFieldFactory(new TableFieldFactory() {
+			private static final long serialVersionUID = 7459048926545235356L;
+
+			public Field<?> createField(Container container, Object itemId,
+					Object propertyId, Component uiContext) {
+				Field<?> f = DefaultFieldFactory.get().createField(container,
+						itemId, propertyId, uiContext);
+				if ("enabled".equals(propertyId))
+					f.setCaption("");
+				return f;
+			}
+		});
+
+		tPerm.setVisibleColumns("winIdShow", "permission", "enabled");
+		tPerm.setColumnWidth("winIdShow", 90);
+		tPerm.setColumnHeader("winIdShow", "Window Id");
+		tPerm.setColumnWidth("permission", -1);
+		tPerm.setColumnHeader("permission", "Permission");
+		tPerm.setColumnWidth("enabled", 60);
+		tPerm.setColumnHeader("enabled", "Active");
 
 		// ==========List selection results =============
 		final IListSelectionAction selAction = new IListSelectionAction() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void Confirm(Object items) {
 				StringBuffer sb = new StringBuffer();
@@ -320,9 +364,9 @@ public class MainW extends MainDes {
 			@Override
 			public void buttonClick(ClickEvent event) {
 
-				ListTst sub = new ListTst(testPermChecker, customizeLW,
+				ListTst sub = new ListTst(permissions, customizeLW,
 						listChoosingMode, listReadOnly, em, null,
-						customizeFWin, testPermChecker, selAction);
+						customizeFWin, permissions, selAction);
 				UI.getCurrent().addWindow(sub);
 			}
 		});
@@ -344,6 +388,8 @@ public class MainW extends MainDes {
 				getSession().close();
 			}
 		});
+		
+		// versions info
 		lbDemoVer.setValue(Version.getFullVersion());
 		lbHLVer.setValue(com.vaadHL.Version.getFullVersion());
 		lbVaadVer.setValue(com.vaadin.shared.Version.getFullVersion());

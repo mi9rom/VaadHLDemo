@@ -146,7 +146,7 @@ public class FormTst extends SingIeItemFWindow {
 			if (showMessages)
 				getMsgs()
 						.showWarning(
-								"Ther is at least one invalid field. Correct please or discard changes.");
+								"There is at least one invalid field. Correct please or discard changes.");
 			return false;
 		}
 

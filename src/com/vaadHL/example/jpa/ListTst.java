@@ -24,11 +24,15 @@ import javax.persistence.EntityManager;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 import org.vaadin.addons.lazyquerycontainer.LazyQueryView;
 
+import com.vaadHL.example.base.MyActionsIds;
 import com.vaadHL.example.jpa.model.Customer;
+import com.vaadHL.test.tstPerm.TestPermCheckerB;
+import com.vaadHL.utl.action.Action;
+import com.vaadHL.utl.action.Action.Command;
+import com.vaadHL.utl.action.ActionGroup;
 import com.vaadHL.utl.converter.StringToPlainIntegerConverter;
 import com.vaadHL.utl.helper.ComponentHelper;
 import com.vaadHL.utl.helper.ItemHelper;
-import com.vaadHL.utl.helper.TableHelper;
 import com.vaadHL.utl.msgs.IMsgs;
 import com.vaadHL.window.EM.LEMWindow;
 import com.vaadHL.window.base.ICustomizeLWMultiMode;
@@ -43,7 +47,6 @@ import com.vaadin.data.util.filter.Like;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -69,7 +72,7 @@ public class ListTst extends LEMWindow {
 			IListSelectionAction selAction) {
 		super("L001", "List Window Title", permChecker, customize, chooseMode,
 				readOnly, em, msgs, selAction);
-		//It is very important to include this
+		// It is very important to include this
 		if (!approvedToOpen)
 			return;
 
@@ -157,18 +160,17 @@ public class ListTst extends LEMWindow {
 				setFilter("lastName", event.getText());
 			}
 		});
-		
-		btGenPerm.addClickListener(new com.vaadin.ui.Button.ClickListener() {
-			
-			private static final long serialVersionUID = 920725430798619475L;
+
+		ActionGroup newActions = new ActionGroup(343434);
+		newActions.put(new Action(MyActionsIds.MOCK_ID, new Command() {
 
 			@Override
-			public void buttonClick(ClickEvent event) {
-				
-				getMsgs().showInfo(ListTst.this.permFW.canDo(getWinId(), "CANDO")?"Allowed":"Denied");	
-				
+			public void run(Action action) {
+				getMsgs().showInfo("I am enabled :");
 			}
-		});
+		}, btGenPerm));
+
+		addActionsAndChkPerm(newActions);
 	}
 
 	public void clearFilter() {
@@ -203,21 +205,7 @@ public class ListTst extends LEMWindow {
 
 	}
 
-	private void fillDetail(Item item) {
-		tfDetail.setReadOnly(false);
-		if (item != null) {
-			ItemHelper ith = new ItemHelper(item);
-			tfDetail.setValue(ith.getString("firstName") + " "
-					+ ith.getString("lastName"));
-		} else {
-			tfDetail.setReadOnly(false);
-			tfDetail.setValue("");
-			tfDetail.setReadOnly(true);
-		}
-
-		tfDetail.setReadOnly(true);
-	}
-
+	@SuppressWarnings("unchecked")
 	private void fillDetailSelected(Object items) {
 		StringBuffer sb = new StringBuffer();
 		if (items != null) {
