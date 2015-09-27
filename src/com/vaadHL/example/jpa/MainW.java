@@ -312,7 +312,7 @@ public class MainW extends MainDes {
 			@Override
 			public void Confirm(Object items) {
 				StringBuffer sb = new StringBuffer();
-				sb.append("Choosed:");
+				sb.append("Choosen:");
 				if (items == null)
 					sb.append("nothing");
 				else {

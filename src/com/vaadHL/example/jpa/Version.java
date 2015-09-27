@@ -20,7 +20,7 @@ package com.vaadHL.example.jpa;
  * Version information.
  */
 public class Version {
-	private final static String version = "1.1.00";
+	private final static String version = "1.1.01";
 
 	/**
 	 * Gets full version string.
