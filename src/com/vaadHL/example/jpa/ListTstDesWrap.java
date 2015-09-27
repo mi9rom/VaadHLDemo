@@ -17,6 +17,7 @@
 package com.vaadHL.example.jpa;
 
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Label;
 
 public class ListTstDesWrap extends ListTstDes {
 
@@ -48,4 +49,13 @@ public class ListTstDesWrap extends ListTstDes {
 	public com.vaadin.ui.Button getFbtGenPerm() {
 		return btGenPerm;
 	}
+
+	public Label getLbSearch() {
+		return lbSearch;
+	}
+
+	public Label getLbLN() {
+		return lbLN;
+	}
+
 }

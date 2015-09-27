@@ -26,6 +26,7 @@ public class ListTstDes extends VerticalLayout {
 	protected TextField tfDetail;
 	protected Label lbLN;
 	protected TextField tfFilter1;
+	protected Label lbSearch;
 	protected ComboBox cbSearchBy;
 	protected Button btGenPerm;
 

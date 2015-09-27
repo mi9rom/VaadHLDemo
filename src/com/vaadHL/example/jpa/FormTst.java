@@ -20,8 +20,8 @@ import javax.persistence.EntityManager;
 
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 
+import com.vaadHL.AppContext;
 import com.vaadHL.utl.converter.StringToPlainIntegerConverter;
-import com.vaadHL.utl.msgs.IMsgs;
 import com.vaadHL.window.EM.SingIeItemFWindow;
 import com.vaadHL.window.base.MWLaunchMode;
 import com.vaadHL.window.base.perm.IWinPermChecker;
@@ -46,32 +46,33 @@ public class FormTst extends SingIeItemFWindow {
 
 	public FormTst(IWinPermChecker permChecker, CustomizeFWin customizeFWin,
 			MWLaunchMode launchMode, EntityManager em,
-			LazyEntityContainer<?> container, Object rowId, IMsgs msgs,
-			boolean readOnlyW) {
+			LazyEntityContainer<?> container, Object rowId,
+			AppContext appContext, boolean readOnlyW) {
 
 		super("M001", "Form Window Title", permChecker, customizeFWin,
-				launchMode, em, container, rowId, msgs, readOnlyW);
-		
-		//It is very important to include this
+				launchMode, em, container, rowId, appContext, readOnlyW);
+
+		// It is very important to include this
 		if (!approvedToOpen)
 			return;
 		
-		
-		setWidth("800px");
+		setWidth("920px");
 		setHeight("500px");
-		
+
+		fFirstName.setCaption(getI18S("fFirstName"));
+		fFirstName.addValidator(new StringLengthValidator(getI18S("FNlEN"), 1,
+				15, false));
+		fFirstName.setRequiredError(getI18S("valReq"));
+
+		tfLastName.addValidator(new StringLengthValidator(getI18S("LNLEN"), 1,
+				20, false));
+
+		tfLastName.setCaption(getI18S("tfLastName"));
+		tfLastName.setRequiredError(getI18S("valReq"));
+
+		tfYearOfBirth.setCaption(getI18S("tfYearOfBirth"));
 		tfYearOfBirth.setConverter(new StringToPlainIntegerConverter());
-
-		// field level validations
-		fFirstName.addValidator(new StringLengthValidator(
-				"The first name must be 1-15 letters ", 1, 15, false));
-		fFirstName.setRequiredError("Value is required");
-
-		tfLastName.addValidator(new StringLengthValidator(
-				"The last name must be 1-20 letters ", 1, 20, false));
-		tfLastName.setRequiredError("Value is required");
-
-		String tfYearOfBirthMsg = "Year must be between 1920 and 2010";
+		String tfYearOfBirthMsg = getI18S("yearVal");
 		tfYearOfBirth.addValidator(new IntegerRangeValidator(tfYearOfBirthMsg,
 				1920, 2010));
 		tfYearOfBirth.setRequiredError(tfYearOfBirthMsg);
@@ -110,9 +111,7 @@ public class FormTst extends SingIeItemFWindow {
 	protected boolean canEditMsg() {
 		String noEdit = "Abbassi";
 		if (tfLastName.getValue().equals(noEdit)) {
-			getMsgs().showInfo(
-					"Edition of the " + noEdit
-							+ " is forbidden.");
+			getMsgs().showInfo(String.format(getI18S("edOf"), noEdit));
 			return false;
 		} else
 			return true;
@@ -125,9 +124,7 @@ public class FormTst extends SingIeItemFWindow {
 	protected boolean canDeleteMsg() {
 		String noEdit = "Abbassi";
 		if (tfLastName.getValue().equals(noEdit)) {
-			getMsgs().showInfo(
-					"You are not allowed to delete " + noEdit
-							+ " unless you will be deleted!");
+			getMsgs().showInfo(getI18S("youDel") + " " + noEdit);
 			return false;
 		} else
 			return true;
@@ -144,9 +141,7 @@ public class FormTst extends SingIeItemFWindow {
 		if (!(fFirstName.isValid() && tfLastName.isValid() && tfYearOfBirth
 				.isValid())) {
 			if (showMessages)
-				getMsgs()
-						.showWarning(
-								"There is at least one invalid field. Correct please or discard changes.");
+				getMsgs().showWarning(getI18S("thereIsAt"));
 			return false;
 		}
 
@@ -154,12 +149,12 @@ public class FormTst extends SingIeItemFWindow {
 			if (tfLastName.getValue().equals("Aaron")
 					&& Integer.parseInt(tfYearOfBirth.getValue()) < 1980) {
 				if (showMessages)
-					getMsgs().showWarning("Aaron can't be so old :)");
+					getMsgs().showWarning(getI18S("arSoOld"));
 				return false;
 			}
 		} catch (NumberFormatException e) {
 			if (showMessages)
-				getMsgs().showError("wrong year", 1200);
+				getMsgs().showError(getI18S("wrongYear"), 1200);
 			return false;
 		}
 

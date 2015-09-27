@@ -24,16 +24,15 @@ import javax.persistence.EntityManager;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 import org.vaadin.addons.lazyquerycontainer.LazyQueryView;
 
+import com.vaadHL.AppContext;
 import com.vaadHL.example.base.MyActionsIds;
 import com.vaadHL.example.jpa.model.Customer;
-import com.vaadHL.test.tstPerm.TestPermCheckerB;
 import com.vaadHL.utl.action.Action;
 import com.vaadHL.utl.action.Action.Command;
 import com.vaadHL.utl.action.ActionGroup;
 import com.vaadHL.utl.converter.StringToPlainIntegerConverter;
 import com.vaadHL.utl.helper.ComponentHelper;
 import com.vaadHL.utl.helper.ItemHelper;
-import com.vaadHL.utl.msgs.IMsgs;
 import com.vaadHL.window.EM.LEMWindow;
 import com.vaadHL.window.base.ICustomizeLWMultiMode;
 import com.vaadHL.window.base.IListSelectionAction;
@@ -67,11 +66,11 @@ public class ListTst extends LEMWindow {
 
 	public ListTst(IWinPermChecker permChecker,
 			ICustomizeLWMultiMode customize, ChoosingMode chooseMode,
-			boolean readOnly, EntityManager em, IMsgs msgs,
+			boolean readOnly, EntityManager em, AppContext appContext,
 			CustomizeFWin customizeFWin, IWinPermChecker permFW,
 			IListSelectionAction selAction) {
 		super("L001", "List Window Title", permChecker, customize, chooseMode,
-				readOnly, em, msgs, selAction);
+				readOnly, em, appContext, selAction);
 		// It is very important to include this
 		if (!approvedToOpen)
 			return;
@@ -118,9 +117,9 @@ public class ListTst extends LEMWindow {
 		table.setSelectable(true);
 		table.setColumnReorderingAllowed(true);
 		table.setColumnCollapsingAllowed(true);
-		table.setColumnHeader("lastName", "Last name");
-		table.setColumnHeader("firstName", "First name");
-		table.setColumnHeader("yearOfBirth", "Year of birth");
+		table.setColumnHeader("lastName", getI18S("tfLastName"));
+		table.setColumnHeader("firstName", getI18S("fFirstName"));
+		table.setColumnHeader("yearOfBirth", getI18S("tfYearOfBirth"));
 		table.setConverter("yearOfBirth", new StringToPlainIntegerConverter());
 		table.setNullSelectionAllowed(true);
 		if (getChooseMode() == ChoosingMode.MULTIPLE_CHOOSE) {
@@ -133,9 +132,12 @@ public class ListTst extends LEMWindow {
 		table.addValueChangeListener(tableRowChangeListener);
 
 		// the filter
+		ml.getLbLN().setValue(getI18S("tfLastName") + ":");
+		ml.getLbSearch().setValue(getI18S("lbSearch"));
 		cbSearchBy.setNullSelectionAllowed(false);
 		cbSearchBy.setItemCaptionMode(ItemCaptionMode.EXPLICIT_DEFAULTS_ID);
-		ComponentHelper.populateWIds(cbSearchBy, "by beginning", "anywhere");
+		String[] sby = getI18AS("cbSearchBy");
+		ComponentHelper.populateWIds(cbSearchBy, sby);
 		cbSearchBy.setValue(0);
 		cbSearchBy.addValueChangeListener(new ValueChangeListener() {
 
@@ -162,13 +164,14 @@ public class ListTst extends LEMWindow {
 		});
 
 		ActionGroup newActions = new ActionGroup(343434);
-		newActions.put(new Action(MyActionsIds.MOCK_ID, new Command() {
+		newActions.put(new Action(getAppContext(), MyActionsIds.MOCK_ID,
+				new Command() {
 
-			@Override
-			public void run(Action action) {
-				getMsgs().showInfo("I am enabled :");
-			}
-		}, btGenPerm));
+					@Override
+					public void run(Action action) {
+						getMsgs().showInfo("I am enabled :");
+					}
+				}, btGenPerm));
 
 		addActionsAndChkPerm(newActions);
 	}
@@ -262,8 +265,8 @@ public class ListTst extends LEMWindow {
 		}
 
 		FormTst sub = new FormTst(new MWinPermChecker(getWinId(), permFW),
-				customizeFWin, launchModeMW, em, container, rowId, getMsgs(),
-				isReadOnlyWin());
+				customizeFWin, launchModeMW, em, container, rowId,
+				getAppContext(), isReadOnlyWin());
 		sub.setModal(true);
 		UI.getCurrent().addWindow(sub);
 

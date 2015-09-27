@@ -17,13 +17,17 @@
 package com.vaadHL.example.jpa;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import com.vaadHL.AppContext;
 import com.vaadHL.example.base.MyActionsIds;
+import com.vaadHL.example.base.Version;
+import com.vaadHL.i18n.I18Sup;
 import com.vaadHL.test.tstPerm.TestPermCheckerB;
 import com.vaadHL.test.tstPerm.TestPermCheckerB.PermItem;
 import com.vaadHL.utl.helper.ComponentHelper;
@@ -64,14 +68,21 @@ public class MainW extends MainDes {
 	boolean listReadOnly;
 	private TestPermCheckerB permissions;
 
-	public MainW() {
+	private final AppContext appContext;
+
+	private volatile boolean disableListeners = false;
+	private I18Sup m;
+
+	public MainW(final AppContext appContext) {
 		super();
+		this.appContext = appContext;
 		em = ENTITY_MANAGER_FACTORY.createEntityManager();
+		m = appContext.getI18();
 
 		// ========== list window launch mode =============
 
 		chkReadOnly.addValueChangeListener(new ValueChangeListener() {
-		private static final long serialVersionUID = -5304522804592982630L;
+			private static final long serialVersionUID = -5304522804592982630L;
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
@@ -80,9 +91,8 @@ public class MainW extends MainDes {
 			}
 		});
 
-		String[] choosingModeS = { "no choose", "single choose",
-				"multiple choose" };
-		ComponentHelper.populateWIds(cbChoosingMode, choosingModeS);
+		ComponentHelper.populateWIds(cbChoosingMode,
+				m.getArryString("choosingModeS"));
 		cbChoosingMode.setNullSelectionAllowed(false);
 		cbChoosingMode.addValueChangeListener(new ValueChangeListener() {
 
@@ -90,7 +100,12 @@ public class MainW extends MainDes {
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				int val = (int) cbChoosingMode.getValue();
+				if (disableListeners)
+					return;
+				Object o = cbChoosingMode.getValue();
+				if (o == null)
+					return;
+				int val = (int) o;
 				listChoosingMode = (ChoosingMode.values()[val]);
 				if (val == 0) {
 					laCustNCM.setVisible(true);
@@ -103,13 +118,21 @@ public class MainW extends MainDes {
 		});
 		cbChoosingMode.setValue(0);
 
-		// ========== list window customization =============
+		String[] lanuageS = { "Default language", "Deutsch", "English", "Polski" };
+		final Locale[] locale = { Locale.getDefault(), new Locale("de", "DE"),
+				new Locale("en", "US"), new Locale("pl", "PL") };
+		ComponentHelper.populateWIds(cbLanguage, lanuageS);
+		cbLanguage.setValue(0);
+		cbLanguage.setNullSelectionAllowed(false);
+		cbLanguage.addValueChangeListener(new ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				int val = (int) cbLanguage.getValue();
+				setLocale(locale[val]);
+			}
+		});
 
-		String[] doubleClickModeS = { "open the form in the details mode",
-				"open the form in the view mode",
-				"open the form in the edit mode", "delete the clicked record",
-				"create a new record", "choose the selected record(s)",
-				"do nothing" };
+		// ========== list window customization =============
 
 		// no-choose mode
 		final LWCustomizeLM customizeLWNoCh = new LWCustomizeLM();
@@ -127,15 +150,16 @@ public class MainW extends MainDes {
 		chkViewRec.setPropertyDataSource(customizeLWNoChBI
 				.getItemProperty("viewFunc"));
 
-		ComponentHelper.populateWIdsSkip(cbDoubleClick, doubleClickModeS,
-				new Integer[] { 5 });
+		ComponentHelper.populateWIdsSkip(cbDoubleClick,
+				m.getArryString("doubleClickModeS"), new Integer[] { 5 });
 		cbDoubleClick.addValueChangeListener(new ValueChangeListener() {
 
 			private static final long serialVersionUID = 2649106479371080195L;
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-
+				if (disableListeners)
+					return;
 				customizeLWNoCh.setDoubleClickAc(((DoubleClickAc.values()[((int) cbDoubleClick
 						.getValue())])));
 
@@ -160,14 +184,14 @@ public class MainW extends MainDes {
 		chkViewRecChM.setPropertyDataSource(customizeLWBIChMo
 				.getItemProperty("viewFunc"));
 
-		ComponentHelper.populateWIds(cbDoubleClickChM, doubleClickModeS);
 		cbDoubleClickChM.addValueChangeListener(new ValueChangeListener() {
 
 			private static final long serialVersionUID = -5472665008056617982L;
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-
+				if (disableListeners)
+					return;
 				customizeLWChMo.setDoubleClickAc((DoubleClickAc.values()[((int) cbDoubleClickChM
 						.getValue())]));
 
@@ -194,12 +218,8 @@ public class MainW extends MainDes {
 		chkPrevNext.setPropertyDataSource(customizeFWinBI
 				.getItemProperty("prevNextFunc"));
 
-		String[] autoSaveDiscard = {
-				"ask to save or discard changes and close",
-				"save changes without asking and close",
-				"discard changes without asking and close",
-				"show the message but do not close" };
-		ComponentHelper.populateWIds(cbAutoSaveDiscard, autoSaveDiscard);
+		ComponentHelper.populateWIds(cbAutoSaveDiscard,
+				m.getArryString("autoSaveDiscard"));
 		cbAutoSaveDiscard.setNullSelectionAllowed(false);
 		cbAutoSaveDiscard.setValue(0);
 		cbAutoSaveDiscard.addValueChangeListener(new ValueChangeListener() {
@@ -207,15 +227,15 @@ public class MainW extends MainDes {
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-
+				if (disableListeners)
+					return;
 				customizeFWin.setAutoSaveDiscard(AutoSaveDiscard.values()[((int) cbAutoSaveDiscard
 						.getValue())]);
 			}
 		});
 
-		String[] closinMethod = { "show the OK and CANCEL button",
-				"show the CLOSE button only" };
-		ComponentHelper.populateWIds(cbClosingMethod, closinMethod);
+		ComponentHelper.populateWIds(cbClosingMethod,
+				m.getArryString("closinMethod"));
 		cbClosingMethod.setValue(0);
 		cbClosingMethod.setNullSelectionAllowed(false);
 		cbClosingMethod.addValueChangeListener(new ValueChangeListener() {
@@ -223,6 +243,8 @@ public class MainW extends MainDes {
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
+				if (disableListeners)
+					return;
 				customizeFWin
 						.setShowOKCancel(((int) cbClosingMethod.getValue()) == 0 ? true
 								: false);
@@ -231,8 +253,8 @@ public class MainW extends MainDes {
 
 		// ========== mock permissions =============
 		permissions = new TestPermCheckerB();
-		permissions.put("L001",MyActionsIds.MOCK_ID,false);
-		
+		permissions.put("L001", MyActionsIds.MOCK_ID, false);
+
 		BeanContainer<String, PermItem> permContainer = new BeanContainer<String, PermItem>(
 				PermItem.class);
 		permContainer
@@ -257,15 +279,14 @@ public class MainW extends MainDes {
 		tPerm.setColumnCollapsingAllowed(true);
 
 		tPerm.addGeneratedColumn("permission", new ColumnGenerator() {
-		private static final long serialVersionUID = 8174249667866723293L;
+			private static final long serialVersionUID = 8174249667866723293L;
 
 			@Override
 			public Object generateCell(Table source, Object itemId,
 					Object columnId) {
 				Item itm = source.getItem(itemId);
 				int acId = (int) itm.getItemProperty("permId").getValue();
-
-				return MyActionsIds.getName(acId);
+				return MyActionsIds.getName(appContext.getI18(), acId);
 
 			}
 		});
@@ -299,11 +320,8 @@ public class MainW extends MainDes {
 
 		tPerm.setVisibleColumns("winIdShow", "permission", "enabled");
 		tPerm.setColumnWidth("winIdShow", 90);
-		tPerm.setColumnHeader("winIdShow", "Window Id");
 		tPerm.setColumnWidth("permission", -1);
-		tPerm.setColumnHeader("permission", "Permission");
 		tPerm.setColumnWidth("enabled", 60);
-		tPerm.setColumnHeader("enabled", "Active");
 
 		// ==========List selection results =============
 		final IListSelectionAction selAction = new IListSelectionAction() {
@@ -312,9 +330,9 @@ public class MainW extends MainDes {
 			@Override
 			public void Confirm(Object items) {
 				StringBuffer sb = new StringBuffer();
-				sb.append("Choosen:");
+				sb.append(m.getStringNE("ChoosenS"));
 				if (items == null)
-					sb.append("nothing");
+					sb.append(m.getStringNE("nothing"));
 				else {
 					Set<Object> se;
 					if (items instanceof Set<?>)
@@ -335,24 +353,24 @@ public class MainW extends MainDes {
 					}
 
 				}
-				taChoosed.setReadOnly(false);
-				taChoosed.setValue(sb.toString());
-				taChoosed.setReadOnly(true);
+				taChoosen.setReadOnly(false);
+				taChoosen.setValue(sb.toString());
+				taChoosen.setReadOnly(true);
 			}
 
 			@Override
 			public void Cancel(Object items) {
-				taChoosed.setReadOnly(false);
-				taChoosed.setValue("Canceled:\n");
-				taChoosed.setReadOnly(true);
+				taChoosen.setReadOnly(false);
+				taChoosen.setValue(m.getStringNE("canceledN"));
+				taChoosen.setReadOnly(true);
 
 			}
 
 			@Override
 			public void Exit(Object items) {
-				taChoosed.setReadOnly(false);
-				taChoosed.setValue("Closed in the no-selection mode");
-				taChoosed.setReadOnly(true);
+				taChoosen.setReadOnly(false);
+				taChoosen.setValue(m.getStringNE("clNoSel"));
+				taChoosen.setReadOnly(true);
 
 			}
 		};
@@ -365,7 +383,7 @@ public class MainW extends MainDes {
 			public void buttonClick(ClickEvent event) {
 
 				ListTst sub = new ListTst(permissions, customizeLW,
-						listChoosingMode, listReadOnly, em, null,
+						listChoosingMode, listReadOnly, em, appContext,
 						customizeFWin, permissions, selAction);
 				UI.getCurrent().addWindow(sub);
 			}
@@ -388,10 +406,104 @@ public class MainW extends MainDes {
 				getSession().close();
 			}
 		});
-		
+
 		// versions info
 		lbDemoVer.setValue(Version.getFullVersion());
 		lbHLVer.setValue(com.vaadHL.Version.getFullVersion());
 		lbVaadVer.setValue(com.vaadin.shared.Version.getFullVersion());
 	}
+
+	@Override
+	public void attach() {
+		// TODO Auto-generated method stub
+		super.attach();
+		// appContext.getI18().changeAll(MainW.this);
+		setLocale(appContext.getI18().getLocale());
+	}
+
+	@Override
+	public void setLocale(Locale locale) {
+		super.setLocale(locale);
+		appContext.getI18().setLocale(locale);
+		I18Sup i18 = appContext.getI18();
+
+		lbL001.setValue(i18.getStringNE("lbL001"));
+		chkReadOnly.setCaption(i18.getStringNE("chkReadOnly"));
+		cbChoosingMode.setCaption(i18.getStringNE("cbChoosingMode"));
+		lbCustomization.setValue(i18.getStringNE("lbCustomization"));
+		chkDetails.setCaption(i18.getStringNE("chkDetails"));
+		chkAddRec.setCaption(i18.getStringNE("chkAddRec"));
+		chkDeleteRec.setCaption(i18.getStringNE("chkDeleteRec"));
+		chkEditRec.setCaption(i18.getStringNE("chkEditRec"));
+		chkViewRec.setCaption(i18.getStringNE("chkViewRec"));
+		cbDoubleClick.setCaption(i18.getStringNE("cbDoubleClick"));
+
+		chkDetailsChM.setCaption(i18.getStringNE("chkDetails"));
+		chkAddRecChM.setCaption(i18.getStringNE("chkAddRec"));
+		chkDeleteRecChM.setCaption(i18.getStringNE("chkDeleteRec"));
+		chkEditRecChM.setCaption(i18.getStringNE("chkEditRec"));
+		chkViewRecChM.setCaption(i18.getStringNE("chkViewRec"));
+		cbDoubleClickChM.setCaption(i18.getStringNE("cbDoubleClick"));
+
+		chkAskSave.setCaption(i18.getStringNE("chkAskSave"));
+		chkAskDiscard.setCaption(i18.getStringNE("chkAskDiscard"));
+		chkAskDelete.setCaption(i18.getStringNE("chkAskDelete"));
+		chkAskCreate.setCaption(i18.getStringNE("chkAskCreate"));
+		chkPrevNext.setCaption(i18.getStringNE("chkPrevNext"));
+		cbAutoSaveDiscard.setCaption(i18.getStringNE("cbAutoSaveDiscard"));
+		cbClosingMethod.setCaption(i18.getStringNE("cbClosingMethod"));
+
+		lbPerm.setValue(i18.getStringNE("lbPerm"));
+		btRunTest.setCaption(i18.getStringNE("btRun"));
+		btExit.setCaption(i18.getStringNE("btExit"));
+
+		lbM001.setValue(i18.getStringNE("lbM001"));
+
+		tPerm.setColumnHeader("winIdShow", m.getStringNE("Window_Id"));
+		tPerm.setColumnHeader("permission", m.getStringNE("Permission"));
+		tPerm.setColumnHeader("enabled", m.getStringNE("Active"));
+
+		taChoosen.setCaption(m.getString("taChoosen"));
+		// cbLanguage.setCaption(m.getStringNE("cbLanguage"));
+
+		Object val;
+		disableListeners = true;
+		val = cbChoosingMode.getValue();
+		ComponentHelper.populateWIds(cbChoosingMode,
+				i18.getArryString("choosingModeS"));
+		disableListeners = false;
+		cbChoosingMode.setValue(val);
+
+		disableListeners = true;
+		val = cbDoubleClick.getValue();
+		ComponentHelper.populateWIdsSkip(cbDoubleClick,
+				i18.getArryString("doubleClickModeS"), new Integer[] { 5 });
+		disableListeners = false;
+		cbDoubleClick.setValue(val);
+
+		disableListeners = true;
+		val = cbAutoSaveDiscard.getValue();
+		ComponentHelper.populateWIds(cbAutoSaveDiscard,
+				i18.getArryString("autoSaveDiscard"));
+		disableListeners = false;
+		cbAutoSaveDiscard.setValue(val);
+
+		disableListeners = true;
+		val = cbDoubleClickChM.getValue();
+		ComponentHelper.populateWIdsSkip(cbDoubleClickChM,
+				i18.getArryString("doubleClickModeS"), new Integer[] { 5 });
+		disableListeners = false;
+		cbDoubleClickChM.setValue(val);
+
+		disableListeners = true;
+		val = cbClosingMethod.getValue();
+		ComponentHelper.populateWIds(cbClosingMethod,
+				i18.getArryString("closinMethod"));
+		disableListeners = false;
+		cbClosingMethod.setValue(val);
+
+		tPerm.refreshRowCache();
+
+	}
+
 }

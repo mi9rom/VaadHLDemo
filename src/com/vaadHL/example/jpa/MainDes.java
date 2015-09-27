@@ -24,7 +24,8 @@ import com.vaadin.ui.declarative.Design;
 @SuppressWarnings("serial")
 public class MainDes extends VerticalLayout {
 	protected VerticalLayout laL001;
-	protected Label _b_A__b_4;
+	protected VerticalLayout cbChoosing;
+	protected Label lbL001;
 	protected CheckBox chkReadOnly;
 	protected ComboBox cbChoosingMode;
 	protected Label lbCustomization;
@@ -42,9 +43,10 @@ public class MainDes extends VerticalLayout {
 	protected CheckBox chkEditRecChM;
 	protected CheckBox chkViewRecChM;
 	protected ComboBox cbDoubleClickChM;
-	protected TextArea taChoosed;
+	protected TextArea taChoosen;
 	protected VerticalLayout laM001;
-	protected Label _b_A__b_;
+	protected ComboBox cbLanguage;
+	protected Label lbM001;
 	protected CheckBox chkAskSave;
 	protected CheckBox chkAskDiscard;
 	protected CheckBox chkAskDelete;
@@ -53,7 +55,7 @@ public class MainDes extends VerticalLayout {
 	protected ComboBox cbAutoSaveDiscard;
 	protected ComboBox cbClosingMethod;
 	protected VerticalLayout laPermissions;
-	protected Label _b_A__b_5;
+	protected Label lbPerm;
 	protected Table tPerm;
 	protected Button btRunTest;
 	protected Button btExit;

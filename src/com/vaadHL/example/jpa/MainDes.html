@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
  <head>
-  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;PAPER_WIDTH&quot;:1374,&quot;PAPER_HEIGHT&quot;:1113,&quot;PAPER_SCROLL_LEFT&quot;:1787,&quot;PAPER_SCROLL_TOP&quot;:2285,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;oratstjpa&quot;}">
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;PAPER_WIDTH&quot;:1393,&quot;PAPER_HEIGHT&quot;:1113,&quot;PAPER_SCROLL_LEFT&quot;:2105,&quot;PAPER_SCROLL_TOP&quot;:1949,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;oratstjpa&quot;}">
  </head> 
  <body> 
   <v-vertical-layout> 
@@ -11,8 +11,8 @@
     </v-label> 
     <v-css-layout primary-style-name="v-csslayout-inline" :center=""> 
      <v-vertical-layout primary-style-name="v-verticallayout" style-name="backgrWhite" width="412px" height="594px" _id="laL001"> 
-      <v-vertical-layout spacing="true" width="397px" margin="true"> 
-       <v-label width-auto="true" height="24px" _id="_b_A__b_4" :center=""> 
+      <v-vertical-layout spacing="true" width="397px" margin="true" _id="cbChoosing"> 
+       <v-label width-auto="true" height="24px" _id="lbL001" :center=""> 
         <b>(L001) List window launch type</b> 
        </v-label> 
        <v-check-box caption="read only" _id="chkReadOnly"></v-check-box> 
@@ -25,7 +25,7 @@
         <v-check-box caption="addition visible" _id="chkAddRec"></v-check-box> 
         <v-check-box caption="deletion visible" checked="true" _id="chkDeleteRec"></v-check-box> 
         <v-check-box caption="editing visible" checked="true" _id="chkEditRec"></v-check-box> 
-        <v-check-box caption="viewing visible" height="21px" checked="true" _id="chkViewRec"></v-check-box> 
+        <v-check-box caption="viewing visible" checked="true" _id="chkViewRec"></v-check-box> 
         <v-combo-box caption="Double click action:" item-caption-mode="id" width-full="true" _id="cbDoubleClick"></v-combo-box> 
        </v-vertical-layout> 
        <v-vertical-layout visible="false" spacing="true" _id="laCustChM"> 
@@ -33,30 +33,33 @@
         <v-check-box caption="addition visible" checked="true" _id="chkAddRecChM"></v-check-box> 
         <v-check-box caption="deletion visible" checked="true" _id="chkDeleteRecChM"></v-check-box> 
         <v-check-box caption="editing visible" checked="true" _id="chkEditRecChM"></v-check-box> 
-        <v-check-box caption="viewing visible" height="21px" checked="true" _id="chkViewRecChM"></v-check-box> 
+        <v-check-box caption="viewing visible" checked="true" _id="chkViewRecChM"></v-check-box> 
         <v-combo-box caption="Double click action:" item-caption-mode="id" width-full="true" _id="cbDoubleClickChM"></v-combo-box> 
        </v-vertical-layout> 
-       <v-text-area caption="Returned selection:" width-full="true" height="85px" _id="taChoosed"></v-text-area> 
+       <v-text-area caption="Returned selection:" width-full="true" height="85px" _id="taChoosen"></v-text-area> 
       </v-vertical-layout> 
      </v-vertical-layout> 
-     <v-vertical-layout primary-style-name="v-verticallayout" id="laM001" width="460px" height="584px" _id="laM001"> 
-      <v-vertical-layout primary-style-name="v-verticallayout"> 
-       <v-vertical-layout style-name="backgrWhite" spacing="true" size-auto="true" margin="true"> 
-        <v-label size-auto="true" _id="_b_A__b_" :center=""> 
-         <b>(M001) Form window customization</b> 
-        </v-label> 
-        <v-check-box caption="confirm before saving changes" _id="chkAskSave"></v-check-box> 
-        <v-check-box caption="confirm before discarding changes" checked="true" _id="chkAskDiscard"></v-check-box> 
-        <v-check-box caption="confirm before deletion (on the form window)" height="19px" checked="true" _id="chkAskDelete"></v-check-box> 
-        <v-check-box caption="confirm before creation (on the form window)" height="19px" _id="chkAskCreate"></v-check-box> 
-        <v-check-box caption="previous, next moving" checked="true" _id="chkPrevNext"></v-check-box> 
-        <v-combo-box caption="When closing the form window using &quot;Close&quot; button or x:" invalid-allowed="false" item-caption-mode="id" width-full="true" _id="cbAutoSaveDiscard"></v-combo-box> 
-        <v-combo-box caption="Closing method:" item-caption-mode="id" width-full="true" _id="cbClosingMethod"></v-combo-box> 
+     <v-vertical-layout primary-style-name="v-verticallayout" id="laM001" width-auto="true" height="584px" _id="laM001"> 
+      <v-vertical-layout primary-style-name="v-verticallayout" spacing="true" size-auto="true"> 
+       <v-combo-box invalid-allowed="false" item-caption-mode="id" width-full="true" _id="cbLanguage" :center=""></v-combo-box> 
+       <v-vertical-layout primary-style-name="v-verticallayout" style-name="backgrWhite"> 
+        <v-vertical-layout spacing="true" size-auto="true" margin="true"> 
+         <v-label size-auto="true" _id="lbM001" :center=""> 
+          <b>(M001) Form window customization</b> 
+         </v-label> 
+         <v-check-box caption="confirm before saving changes" _id="chkAskSave"></v-check-box> 
+         <v-check-box caption="confirm before discarding changes" checked="true" _id="chkAskDiscard"></v-check-box> 
+         <v-check-box caption="confirm before deletion (on the form window)" height="19px" checked="true" _id="chkAskDelete"></v-check-box> 
+         <v-check-box caption="confirm before creation (on the form window)" height="19px" _id="chkAskCreate"></v-check-box> 
+         <v-check-box caption="previous, next moving" checked="true" _id="chkPrevNext"></v-check-box> 
+         <v-combo-box caption="When closing the form window using &quot;Close&quot; button or x:" invalid-allowed="false" item-caption-mode="id" width-full="true" _id="cbAutoSaveDiscard"></v-combo-box> 
+         <v-combo-box caption="Closing method:" item-caption-mode="id" width-full="true" _id="cbClosingMethod"></v-combo-box> 
+        </v-vertical-layout> 
        </v-vertical-layout> 
       </v-vertical-layout> 
      </v-vertical-layout> 
      <v-vertical-layout primary-style-name="v-verticallayout" style-name="backgrWhite" spacing="true" width="412px" margin="true" _id="laPermissions"> 
-      <v-label size-auto="true" _id="_b_A__b_5" :center=""> 
+      <v-label id="lbPerm" size-auto="true" _id="lbPerm" :center=""> 
        <b>Permissions</b> 
       </v-label> 
       <v-table invalid-allowed="false" immediate="true" width-full="true" height="482px" _id="tPerm" :center=""></v-table> 

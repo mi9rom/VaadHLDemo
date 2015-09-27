@@ -16,8 +16,13 @@
 
 package com.vaadHL.example.jpa;
 
+import java.util.Locale;
+
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadHL.AppContext;
+import com.vaadHL.example.i18n.MyI18;
+import com.vaadHL.utl.msgs.Msgs;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
@@ -28,22 +33,21 @@ import com.vaadin.ui.UI;
 @Theme("oratstjpa")
 public class AppMain extends UI {
 	@WebServlet(value = "/*", asyncSupported = true)
-	@VaadinServletConfiguration(productionMode = false, ui = AppMain.class)	
+	@VaadinServletConfiguration(productionMode = false, ui = AppMain.class)
 	public static class Servlet extends VaadinServlet {
 	}
-	
-	private static final long serialVersionUID = 1891752310777496322L;
 
+	private static final long serialVersionUID = 1891752310777496322L;
 
 	public AppMain() {
 		// TODO Auto-generated constructor stub
 	}
 
-	
 	@Override
 	protected void init(VaadinRequest request) {
-		setContent(new MainW());
-		
+		setLocale(Locale.getDefault());
+		setContent(new MainW(new AppContext(new Msgs(), new MyI18(
+				getLocale()))));
 	}
 
 }
