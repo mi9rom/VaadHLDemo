@@ -35,7 +35,6 @@ import com.vaadHL.utl.helper.ComponentHelper;
 import com.vaadHL.utl.helper.ItemHelper;
 import com.vaadHL.window.EM.LEMWindow;
 import com.vaadHL.window.base.ICustomizeLWMultiMode;
-import com.vaadHL.window.base.IListSelectionAction;
 import com.vaadHL.window.base.MWLaunchMode;
 import com.vaadHL.window.base.perm.IWinPermChecker;
 import com.vaadHL.window.base.perm.MWinPermChecker;
@@ -67,10 +66,9 @@ public class ListTst extends LEMWindow {
 	public ListTst(IWinPermChecker permChecker,
 			ICustomizeLWMultiMode customize, ChoosingMode chooseMode,
 			boolean readOnly, EntityManager em, AppContext appContext,
-			CustomizeFWin customizeFWin, IWinPermChecker permFW,
-			IListSelectionAction selAction) {
+			CustomizeFWin customizeFWin, IWinPermChecker permFW) {
 		super("L001", "List Window Title", permChecker, customize, chooseMode,
-				readOnly, em, appContext, selAction);
+				readOnly, em, appContext);
 		// It is very important to include this
 		if (!approvedToOpen)
 			return;

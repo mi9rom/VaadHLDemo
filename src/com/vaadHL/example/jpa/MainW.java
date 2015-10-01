@@ -32,10 +32,11 @@ import com.vaadHL.test.tstPerm.TestPermCheckerB;
 import com.vaadHL.test.tstPerm.TestPermCheckerB.PermItem;
 import com.vaadHL.utl.helper.ComponentHelper;
 import com.vaadHL.utl.helper.ItemHelper;
+import com.vaadHL.window.base.BaseListWindow;
 import com.vaadHL.window.base.BaseListWindow.ChoosingMode;
+import com.vaadHL.window.base.BaseListWindow.CloseCause;
 import com.vaadHL.window.base.ICustomizeEditWin.AutoSaveDiscard;
 import com.vaadHL.window.base.ICustomizeListWindow.DoubleClickAc;
-import com.vaadHL.window.base.IListSelectionAction;
 import com.vaadHL.window.base.LWCustomize;
 import com.vaadHL.window.base.LWCustomizeLM;
 import com.vaadin.data.Container;
@@ -55,6 +56,8 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Window.CloseEvent;
+import com.vaadin.ui.Window.CloseListener;
 
 public class MainW extends MainDes {
 
@@ -324,56 +327,6 @@ public class MainW extends MainDes {
 		tPerm.setColumnWidth("enabled", 60);
 
 		// ==========List selection results =============
-		final IListSelectionAction selAction = new IListSelectionAction() {
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public void Confirm(Object items) {
-				StringBuffer sb = new StringBuffer();
-				sb.append(m.getStringNE("ChoosenS"));
-				if (items == null)
-					sb.append(m.getStringNE("nothing"));
-				else {
-					Set<Object> se;
-					if (items instanceof Set<?>)
-						se = (Set<Object>) items;
-					else {
-						se = new HashSet<Object>();
-						se.add(items);
-					}
-
-					for (Object it : se) {
-						ItemHelper item = new ItemHelper((Item) it);
-						sb.append('\n');
-						sb.append(item.getString("firstName"));
-						sb.append(" ");
-						sb.append(item.getString("lastName"));
-						sb.append(" ");
-						sb.append(item.getString("yearOfBirth"));
-					}
-
-				}
-				taChoosen.setReadOnly(false);
-				taChoosen.setValue(sb.toString());
-				taChoosen.setReadOnly(true);
-			}
-
-			@Override
-			public void Cancel(Object items) {
-				taChoosen.setReadOnly(false);
-				taChoosen.setValue(m.getStringNE("canceledN"));
-				taChoosen.setReadOnly(true);
-
-			}
-
-			@Override
-			public void Exit(Object items) {
-				taChoosen.setReadOnly(false);
-				taChoosen.setValue(m.getStringNE("clNoSel"));
-				taChoosen.setReadOnly(true);
-
-			}
-		};
 
 		// ========== run the test ============================
 		btRunTest.addClickListener(new ClickListener() {
@@ -384,7 +337,66 @@ public class MainW extends MainDes {
 
 				ListTst sub = new ListTst(permissions, customizeLW,
 						listChoosingMode, listReadOnly, em, appContext,
-						customizeFWin, permissions, selAction);
+						customizeFWin, permissions);
+
+				sub.addCloseListener(new CloseListener() {
+
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = -5625061490326702522L;
+
+					@Override
+					public void windowClose(CloseEvent e) {
+
+						CloseCause clcs = ((BaseListWindow) e.getSource())
+								.getCloseCause();
+						Object items = clcs.addInfo;
+
+						switch (clcs.cause) {
+						case CHOOSE:
+							StringBuffer sb = new StringBuffer();
+							sb.append(m.getStringNE("ChoosenS"));
+							if (items == null)
+								sb.append(m.getStringNE("nothing"));
+							else {
+								Set<Object> se;
+								if (items instanceof Set<?>)
+									se = (Set<Object>) items;
+								else {
+									se = new HashSet<Object>();
+									se.add(items);
+								}
+
+								for (Object it : se) {
+									ItemHelper item = new ItemHelper((Item) it);
+									sb.append('\n');
+									sb.append(item.getString("firstName"));
+									sb.append(" ");
+									sb.append(item.getString("lastName"));
+									sb.append(" ");
+									sb.append(item.getString("yearOfBirth"));
+								}
+
+							}
+							taChoosen.setReadOnly(false);
+							taChoosen.setValue(sb.toString());
+							taChoosen.setReadOnly(true);
+							break;
+						case CANCEL:
+							taChoosen.setReadOnly(false);
+							taChoosen.setValue(m.getStringNE("canceledN"));
+							taChoosen.setReadOnly(true);
+							break;
+						case NOCHOOSE:
+							taChoosen.setReadOnly(false);
+							taChoosen.setValue(m.getStringNE("clNoSel"));
+							taChoosen.setReadOnly(true);
+						default:
+							break;
+						}
+					}
+				});
 				UI.getCurrent().addWindow(sub);
 			}
 		});
