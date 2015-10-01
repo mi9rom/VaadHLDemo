@@ -118,7 +118,8 @@ public class MainW extends MainDes {
 		});
 		cbChoosingMode.setValue(0);
 
-		String[] lanuageS = { "Default language", "Deutsch", "English", "Polski" };
+		String[] lanuageS = { "Default language", "Deutsch", "English",
+				"Polski" };
 		final Locale[] locale = { Locale.getDefault(), new Locale("de", "DE"),
 				new Locale("en", "US"), new Locale("pl", "PL") };
 		ComponentHelper.populateWIds(cbLanguage, lanuageS);
@@ -198,7 +199,6 @@ public class MainW extends MainDes {
 			}
 		});
 		cbDoubleClickChM.setNullSelectionAllowed(false);
-		cbDoubleClickChM.setValue(5);
 
 		final LWCustomize customizeLW = new LWCustomize(customizeLWChMo,
 				customizeLWNoCh);
@@ -490,8 +490,10 @@ public class MainW extends MainDes {
 
 		disableListeners = true;
 		val = cbDoubleClickChM.getValue();
-		ComponentHelper.populateWIdsSkip(cbDoubleClickChM,
-				i18.getArryString("doubleClickModeS"), new Integer[] { 5 });
+		if (val == null)
+			val = 5;
+		ComponentHelper.populateWIds(cbDoubleClickChM,
+				i18.getArryString("doubleClickModeS"));
 		disableListeners = false;
 		cbDoubleClickChM.setValue(val);
 
