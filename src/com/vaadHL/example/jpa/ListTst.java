@@ -34,6 +34,7 @@ import com.vaadHL.utl.converter.StringToPlainIntegerConverter;
 import com.vaadHL.utl.helper.ComponentHelper;
 import com.vaadHL.utl.helper.ItemHelper;
 import com.vaadHL.window.EM.LEMWindow;
+import com.vaadHL.window.base.BaseWindow;
 import com.vaadHL.window.base.ICustomizeLWMultiMode;
 import com.vaadHL.window.base.MWLaunchMode;
 import com.vaadHL.window.base.perm.IWinPermChecker;
@@ -252,22 +253,18 @@ public class ListTst extends LEMWindow {
 	}
 
 	@Override
-	public void callForm(MWLaunchMode launchModeMW, Object mRowid) {
-
+	protected BaseWindow getForm(MWLaunchMode launchModeMW, Object mRowid) {
 		Object rowId = null;
-
 		if (launchModeMW != MWLaunchMode.NEW_REC) {
 			rowId = getCallFormSelIdMsg(mRowid);
 			if (rowId == null)
-				return;
+				return null;
 		}
-
 		FormTst sub = new FormTst(new MWinPermChecker(getWinId(), permFW),
 				customizeFWin, launchModeMW, em, container, rowId,
 				getAppContext(), isReadOnlyWin());
 		sub.setModal(true);
-		UI.getCurrent().addWindow(sub);
-
+		return sub;
 	}
 
 	@Override
