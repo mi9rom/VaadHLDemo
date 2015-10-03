@@ -33,7 +33,7 @@ import com.vaadin.ui.UI;
 @Theme("oratstjpa")
 public class AppMain extends UI {
 	@WebServlet(value = "/*", asyncSupported = true)
-	@VaadinServletConfiguration(productionMode = false, ui = AppMain.class)
+	@VaadinServletConfiguration(productionMode = false, ui = AppMain.class, widgetset = "com.vaadHL.example.jpa.widgetset.VaadhldemoWidgetset")
 	public static class Servlet extends VaadinServlet {
 	}
 
@@ -46,8 +46,7 @@ public class AppMain extends UI {
 	@Override
 	protected void init(VaadinRequest request) {
 		setLocale(Locale.getDefault());
-		setContent(new MainW(new AppContext(new Msgs(), new MyI18(
-				getLocale()))));
+		setContent(new MainW(new AppContext(new Msgs(), new MyI18(getLocale()))));
 	}
 
 }

@@ -50,7 +50,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 
 public class ListTst extends LEMWindow {
 
@@ -173,6 +172,10 @@ public class ListTst extends LEMWindow {
 				}, btGenPerm));
 
 		addActionsAndChkPerm(newActions);
+		
+	
+		
+	  
 	}
 
 	public void clearFilter() {

@@ -34,7 +34,7 @@
 
   // Insert your own theme rules here
   .v-csslayout-inline { 
-  		@extend  v-csslayout
+  		@extend  v-csslayout;
   		display: inline-block;
   } 
   
