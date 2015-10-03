@@ -282,4 +282,8 @@ public class ListTst extends LEMWindow {
 		// ---------------------------------------------------
 	}
 
+	@Override
+	public void refresh() {
+		container.refresh();
+	}
 }
