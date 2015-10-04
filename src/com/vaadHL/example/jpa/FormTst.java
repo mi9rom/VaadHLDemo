@@ -109,7 +109,7 @@ public class FormTst extends SingIeItemFWindow {
 	 */
 	@Override
 	protected boolean canEditMsg() {
-		String noEdit = "Abbassi";
+		String noEdit = "Abell";
 		if (tfLastName.getValue().equals(noEdit)) {
 			getMsgs().showInfo(String.format(getI18S("edOf"), noEdit));
 			return false;
@@ -122,7 +122,7 @@ public class FormTst extends SingIeItemFWindow {
 	 */
 	@Override
 	protected boolean canDeleteMsg() {
-		String noEdit = "Abbassi";
+		String noEdit = "Abell";
 		if (tfLastName.getValue().equals(noEdit)) {
 			getMsgs().showInfo(getI18S("youDel") + " " + noEdit);
 			return false;
