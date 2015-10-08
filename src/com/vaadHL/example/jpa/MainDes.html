@@ -5,13 +5,14 @@
  </head> 
  <body> 
   <v-vertical-layout> 
-   <v-vertical-layout size-auto="true" margin="true" :middle="" :center=""> 
+   <v-vertical-layout size-auto="true" margin="true" spacing="true" :middle="" :center=""> 
     <v-label size-auto="true" :center=""> 
      <font size="6"><b>VaadHL framework demo </b></font> 
     </v-label> 
+     <v-native-select invalid-allowed="false" item-caption-mode="id"  width="-1px" _id="cbLanguage"  :center=""></v-native-select> 
     <v-css-layout primary-style-name="v-csslayout-inline" :center=""> 
-     <v-vertical-layout primary-style-name="v-verticallayout" style-name="backgrWhite" width="412px" height="594px" _id="laL001"> 
-      <v-vertical-layout spacing="true" width="397px" margin="true" _id="cbChoosing"> 
+     <v-vertical-layout primary-style-name="v-verticallayout" style-name="backgrWhite" width="-1px" height="-1px" _id="laL001"> 
+      <v-vertical-layout spacing="true" width="-1px" margin="true" _id="cbChoosing"> 
        <v-label width-auto="true" height="24px" _id="lbL001" :center=""> 
         <b>(L001) List window launch type</b> 
        </v-label> 
@@ -21,6 +22,8 @@
         <b>Customization:<b></b></b> 
        </v-label> 
        <v-vertical-layout spacing="true" _id="laCustNCM"> 
+        <v-check-box caption="window state auto save" checked="true" _id="chkAutoSaveNCM"></v-check-box> 
+        <v-check-box caption="window state auto restore" checked="true" _id="chkAutoRestoreNCM"></v-check-box>
         <v-check-box caption="details visible" _id="chkDetails"></v-check-box> 
         <v-check-box caption="addition visible" _id="chkAddRec"></v-check-box> 
         <v-check-box caption="deletion visible" checked="true" _id="chkDeleteRec"></v-check-box> 
@@ -29,6 +32,8 @@
         <v-native-select caption="Double click action:" item-caption-mode="id" width-full="true" _id="cbDoubleClick"></v-native-select> 
        </v-vertical-layout> 
        <v-vertical-layout visible="false" spacing="true" _id="laCustChM"> 
+       <v-check-box caption="window state auto save " checked="true" _id="chkAutoSaveChM"></v-check-box>
+       <v-check-box caption="window state auto restore" checked="true" _id="chkAutoRestoreChM"></v-check-box>
         <v-check-box caption="details visible" checked="true" _id="chkDetailsChM"></v-check-box> 
         <v-check-box caption="addition visible" checked="true" _id="chkAddRecChM"></v-check-box> 
         <v-check-box caption="deletion visible" checked="true" _id="chkDeleteRecChM"></v-check-box> 
@@ -39,14 +44,16 @@
        <v-text-area caption="Returned selection:" width-full="true" height="85px" _id="taChoosen"></v-text-area> 
       </v-vertical-layout> 
      </v-vertical-layout> 
-     <v-vertical-layout primary-style-name="v-verticallayout" id="laM001" width-auto="true" height="584px" _id="laM001"> 
+     <v-vertical-layout primary-style-name="v-verticallayout" id="laM001" width-auto="true" height="-1px" _id="laM001"> 
       <v-vertical-layout primary-style-name="v-verticallayout" spacing="true" size-auto="true"> 
-       <v-native-select invalid-allowed="false" item-caption-mode="id" width-full="true" _id="cbLanguage" :center=""></v-native-select> 
+      
        <v-vertical-layout primary-style-name="v-verticallayout" style-name="backgrWhite"> 
         <v-vertical-layout spacing="true" size-auto="true" margin="true"> 
          <v-label size-auto="true" _id="lbM001" :center=""> 
           <b>(M001) Form window customization</b> 
          </v-label> 
+         <v-check-box caption="window state auto save " checked="true" _id="chkAutoSave"></v-check-box>
+         <v-check-box caption="window state auto " checked="true" _id="chkAutoRestore"></v-check-box>
          <v-check-box caption="confirm before saving changes" _id="chkAskSave"></v-check-box> 
          <v-check-box caption="confirm before discarding changes" checked="true" _id="chkAskDiscard"></v-check-box> 
          <v-check-box caption="confirm before deletion (on the form window)" height="19px" checked="true" _id="chkAskDelete"></v-check-box> 

@@ -20,11 +20,12 @@ import javax.persistence.EntityManager;
 
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 
-import com.vaadHL.AppContext;
+import com.vaadHL.IAppContext;
 import com.vaadHL.utl.converter.StringToPlainIntegerConverter;
 import com.vaadHL.window.EM.SingIeItemFWindow;
 import com.vaadHL.window.base.MWLaunchMode;
 import com.vaadHL.window.base.perm.IWinPermChecker;
+import com.vaadHL.window.customize.CustomizeFWin;
 import com.vaadin.data.Item;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.validator.IntegerRangeValidator;
@@ -47,7 +48,7 @@ public class FormTst extends SingIeItemFWindow {
 	public FormTst(IWinPermChecker permChecker, CustomizeFWin customizeFWin,
 			MWLaunchMode launchMode, EntityManager em,
 			LazyEntityContainer<?> container, Object rowId,
-			AppContext appContext, boolean readOnlyW) {
+			IAppContext appContext, boolean readOnlyW) {
 
 		super("M001", "Form Window Title", permChecker, customizeFWin,
 				launchMode, em, container, rowId, appContext, readOnlyW);
@@ -55,7 +56,7 @@ public class FormTst extends SingIeItemFWindow {
 		// It is very important to include this
 		if (!approvedToOpen)
 			return;
-		
+
 		setWidth("920px");
 		setHeight("500px");
 
@@ -146,10 +147,12 @@ public class FormTst extends SingIeItemFWindow {
 		}
 
 		try {
+			int year = 1980;
 			if (tfLastName.getValue().equals("Aaron")
-					&& Integer.parseInt(tfYearOfBirth.getValue()) < 1980) {
+					&& Integer.parseInt(tfYearOfBirth.getValue()) < year) {
 				if (showMessages)
-					getMsgs().showWarning(getI18S("arSoOld"));
+					getMsgs().showWarning(
+							String.format(getI18S("arSoOld"), year));
 				return false;
 			}
 		} catch (NumberFormatException e) {

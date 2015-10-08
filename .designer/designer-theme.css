@@ -1,3 +1,5 @@
+@import "../../../VAADIN/themes/contextmenu/contextmenu.scss";
+
 /**
  * Checks if a list contains a certain value.
  * 
@@ -12747,6 +12749,10 @@ div.v-layout.v-horizontal.v-widget {
 	display: inline-block;
 	width: 19px;
 	overflow: hidden;
+}
+
+.oratstjpa .v-csslayout-inline {
+	display: inline-block;
 }
 
 .backgrWhite {

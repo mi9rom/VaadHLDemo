@@ -24,21 +24,23 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import com.vaadHL.AppContext;
+import com.vaadHL.IAppContext;
 import com.vaadHL.example.base.MyActionsIds;
+import com.vaadHL.example.base.TestPermCheckerB;
 import com.vaadHL.example.base.Version;
+import com.vaadHL.example.base.TestPermCheckerB.PermItem;
 import com.vaadHL.i18n.I18Sup;
-import com.vaadHL.test.tstPerm.TestPermCheckerB;
-import com.vaadHL.test.tstPerm.TestPermCheckerB.PermItem;
 import com.vaadHL.utl.helper.ComponentHelper;
 import com.vaadHL.utl.helper.ItemHelper;
 import com.vaadHL.window.base.BaseListWindow;
 import com.vaadHL.window.base.BaseListWindow.ChoosingMode;
 import com.vaadHL.window.base.BaseListWindow.CloseCause;
-import com.vaadHL.window.base.ICustomizeEditWin.AutoSaveDiscard;
-import com.vaadHL.window.base.ICustomizeListWindow.DoubleClickAc;
-import com.vaadHL.window.base.LWCustomize;
-import com.vaadHL.window.base.LWCustomizeLM;
+import com.vaadHL.window.customize.CustomizeFWin;
+import com.vaadHL.window.customize.ICustomizeEditWin.AutoSaveDiscard;
+import com.vaadHL.window.customize.ICustomizeListWindow.DoubleClickAc;
+import com.vaadHL.window.customize.LWCustomize;
+import com.vaadHL.window.customize.LWCustomizeLM;
+import com.vaadin.annotations.DesignRoot;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -47,20 +49,75 @@ import com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver;
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TableFieldFactory;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
+import com.vaadin.ui.declarative.Design;
 
-public class MainW extends MainDes {
+@DesignRoot
+public class MainW extends VerticalLayout {
 
+	protected VerticalLayout laL001;
+	protected VerticalLayout cbChoosing;
+	protected Label lbL001;
+	protected CheckBox chkReadOnly;
+	protected NativeSelect cbChoosingMode;
+	protected Label lbCustomization;
+	protected VerticalLayout laCustNCM;
+	protected CheckBox chkDetails;
+	protected CheckBox chkAddRec;
+	protected CheckBox chkDeleteRec;
+	protected CheckBox chkEditRec;
+	protected CheckBox chkViewRec;
+	protected NativeSelect cbDoubleClick;
+	protected VerticalLayout laCustChM;
+	protected CheckBox chkDetailsChM;
+	protected CheckBox chkAddRecChM;
+	protected CheckBox chkDeleteRecChM;
+	protected CheckBox chkEditRecChM;
+	protected CheckBox chkViewRecChM;
+	protected NativeSelect cbDoubleClickChM;
+	protected TextArea taChoosen;
+	protected VerticalLayout laM001;
+	protected NativeSelect cbLanguage;
+	protected Label lbM001;
+	protected CheckBox chkAskSave;
+	protected CheckBox chkAskDiscard;
+	protected CheckBox chkAskDelete;
+	protected CheckBox chkAskCreate;
+	protected CheckBox chkPrevNext;
+	protected NativeSelect cbAutoSaveDiscard;
+	protected NativeSelect cbClosingMethod;
+	protected VerticalLayout laPermissions;
+	protected Label lbPerm;
+	protected Table tPerm;
+	protected Button btRunTest;
+	protected Button btExit;
+	protected Label lbDemoVer;
+	protected Label lbHLVer;
+	protected Label lbVaadVer;
+	protected CheckBox chkAutoSave;
+	protected CheckBox chkAutoSaveNCM;
+	protected CheckBox chkAutoSaveChM;
+	protected CheckBox chkAutoRestore;
+	protected CheckBox chkAutoRestoreNCM;
+	protected CheckBox chkAutoRestoreChM;
+	
+	
 	private static final long serialVersionUID = 438202101251810416L;
 	private static String PERS_UNIT = "OraTstJPA";
 	public static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
@@ -71,13 +128,16 @@ public class MainW extends MainDes {
 	boolean listReadOnly;
 	private TestPermCheckerB permissions;
 
-	private final AppContext appContext;
+	private final IAppContext appContext;
 
 	private volatile boolean disableListeners = false;
 	private I18Sup m;
 
-	public MainW(final AppContext appContext) {
+	
+	public MainW(final IAppContext appContext) {
 		super();
+		Design.read("MainDes.html",this);
+		
 		this.appContext = appContext;
 		em = ENTITY_MANAGER_FACTORY.createEntityManager();
 		m = appContext.getI18();
@@ -143,6 +203,10 @@ public class MainW extends MainDes {
 		BeanItem<LWCustomizeLM> customizeLWNoChBI = new BeanItem<LWCustomizeLM>(
 				customizeLWNoCh);
 
+		chkAutoSaveNCM.setPropertyDataSource(customizeLWNoChBI
+				.getItemProperty("autoSaveState"));
+		chkAutoRestoreNCM.setPropertyDataSource(customizeLWNoChBI
+				.getItemProperty("autoRestoreState"));
 		chkDetails.setPropertyDataSource(customizeLWNoChBI
 				.getItemProperty("detailsFunc"));
 		chkAddRec.setPropertyDataSource(customizeLWNoChBI
@@ -177,6 +241,10 @@ public class MainW extends MainDes {
 		BeanItem<LWCustomizeLM> customizeLWBIChMo = new BeanItem<LWCustomizeLM>(
 				customizeLWChMo);
 
+		chkAutoSaveChM.setPropertyDataSource(customizeLWBIChMo
+				.getItemProperty("autoSaveState"));
+		chkAutoRestoreChM.setPropertyDataSource(customizeLWBIChMo
+				.getItemProperty("autoRestoreState"));
 		chkDetailsChM.setPropertyDataSource(customizeLWBIChMo
 				.getItemProperty("detailsFunc"));
 		chkAddRecChM.setPropertyDataSource(customizeLWBIChMo
@@ -210,6 +278,11 @@ public class MainW extends MainDes {
 		customizeFWin = new CustomizeFWin();
 		final BeanItem<CustomizeFWin> customizeFWinBI = new BeanItem<CustomizeFWin>(
 				customizeFWin);
+		
+		chkAutoSave.setPropertyDataSource(customizeFWinBI
+				.getItemProperty("autoSaveState"));
+		chkAutoRestore.setPropertyDataSource(customizeFWinBI
+				.getItemProperty("autoRestoreState"));
 		chkAskCreate.setPropertyDataSource(customizeFWinBI
 				.getItemProperty("askCreate"));
 		chkAskDelete.setPropertyDataSource(customizeFWinBI
@@ -443,6 +516,8 @@ public class MainW extends MainDes {
 		chkReadOnly.setCaption(i18.getStringNE("chkReadOnly"));
 		cbChoosingMode.setCaption(i18.getStringNE("cbChoosingMode"));
 		lbCustomization.setValue(i18.getStringNE("lbCustomization"));
+		chkAutoSaveNCM.setCaption(i18.getStringNE("chkAutoSave"));
+		chkAutoRestoreNCM.setCaption(i18.getStringNE("chkAutoRestore"));
 		chkDetails.setCaption(i18.getStringNE("chkDetails"));
 		chkAddRec.setCaption(i18.getStringNE("chkAddRec"));
 		chkDeleteRec.setCaption(i18.getStringNE("chkDeleteRec"));
@@ -450,6 +525,8 @@ public class MainW extends MainDes {
 		chkViewRec.setCaption(i18.getStringNE("chkViewRec"));
 		cbDoubleClick.setCaption(i18.getStringNE("cbDoubleClick"));
 
+		chkAutoSaveChM.setCaption(i18.getStringNE("chkAutoSave"));
+		chkAutoRestoreChM.setCaption(i18.getStringNE("chkAutoRestore"));
 		chkDetailsChM.setCaption(i18.getStringNE("chkDetails"));
 		chkAddRecChM.setCaption(i18.getStringNE("chkAddRec"));
 		chkDeleteRecChM.setCaption(i18.getStringNE("chkDeleteRec"));
@@ -457,6 +534,8 @@ public class MainW extends MainDes {
 		chkViewRecChM.setCaption(i18.getStringNE("chkViewRec"));
 		cbDoubleClickChM.setCaption(i18.getStringNE("cbDoubleClick"));
 
+		chkAutoSave.setCaption(i18.getStringNE("chkAutoSave"));
+		chkAutoRestore.setCaption(i18.getStringNE("chkAutoRestore"));
 		chkAskSave.setCaption(i18.getStringNE("chkAskSave"));
 		chkAskDiscard.setCaption(i18.getStringNE("chkAskDiscard"));
 		chkAskDelete.setCaption(i18.getStringNE("chkAskDelete"));
@@ -517,6 +596,7 @@ public class MainW extends MainDes {
 		cbClosingMethod.setValue(val);
 
 		tPerm.refreshRowCache();
+		
 
 	}
 

@@ -22,7 +22,6 @@ import javax.servlet.annotation.WebServlet;
 
 import com.vaadHL.AppContext;
 import com.vaadHL.example.i18n.MyI18;
-import com.vaadHL.utl.msgs.Msgs;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
@@ -46,7 +45,7 @@ public class AppMain extends UI {
 	@Override
 	protected void init(VaadinRequest request) {
 		setLocale(Locale.getDefault());
-		setContent(new MainW(new AppContext(new Msgs(), new MyI18(getLocale()))));
+		setContent(new MainW(new AppContext(new MyI18(getLocale()))));
 	}
 
 }

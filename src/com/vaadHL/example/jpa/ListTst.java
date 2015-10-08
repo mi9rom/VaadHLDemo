@@ -24,7 +24,7 @@ import javax.persistence.EntityManager;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 import org.vaadin.addons.lazyquerycontainer.LazyQueryView;
 
-import com.vaadHL.AppContext;
+import com.vaadHL.IAppContext;
 import com.vaadHL.example.base.MyActionsIds;
 import com.vaadHL.example.jpa.model.Customer;
 import com.vaadHL.utl.action.Action;
@@ -33,12 +33,15 @@ import com.vaadHL.utl.action.ActionGroup;
 import com.vaadHL.utl.converter.StringToPlainIntegerConverter;
 import com.vaadHL.utl.helper.ComponentHelper;
 import com.vaadHL.utl.helper.ItemHelper;
+import com.vaadHL.utl.state.VHLFilterState;
+import com.vaadHL.utl.state.VHLState;
 import com.vaadHL.window.EM.LEMWindow;
 import com.vaadHL.window.base.BaseWindow;
-import com.vaadHL.window.base.ICustomizeLWMultiMode;
 import com.vaadHL.window.base.MWLaunchMode;
 import com.vaadHL.window.base.perm.IWinPermChecker;
 import com.vaadHL.window.base.perm.MWinPermChecker;
+import com.vaadHL.window.customize.CustomizeFWin;
+import com.vaadHL.window.customize.ICustomizeLWMultiMode;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -65,7 +68,7 @@ public class ListTst extends LEMWindow {
 
 	public ListTst(IWinPermChecker permChecker,
 			ICustomizeLWMultiMode customize, ChoosingMode chooseMode,
-			boolean readOnly, EntityManager em, AppContext appContext,
+			boolean readOnly, EntityManager em, IAppContext appContext,
 			CustomizeFWin customizeFWin, IWinPermChecker permFW) {
 		super("L001", "List Window Title", permChecker, customize, chooseMode,
 				readOnly, em, appContext);
@@ -172,10 +175,7 @@ public class ListTst extends LEMWindow {
 				}, btGenPerm));
 
 		addActionsAndChkPerm(newActions);
-		
-	
-		
-	  
+
 	}
 
 	public void clearFilter() {
@@ -286,4 +286,44 @@ public class ListTst extends LEMWindow {
 	public void refresh() {
 		container.refresh();
 	}
+
+	public class ListTstFilter extends VHLFilterState {
+		private static final long serialVersionUID = 5812435985141703527L;
+		private String filter1;
+		Object cbSearchBy;
+
+		public ListTstFilter(String filter1, Object cbSearchBy) {
+			super();
+			this.filter1 = filter1;
+			this.cbSearchBy = cbSearchBy;
+		}
+
+		public Object getCbSearchBy() {
+			return cbSearchBy;
+		}
+
+		public String getFilter1() {
+			return filter1;
+		}
+
+		public void setFilter1(String filter1) {
+			this.filter1 = filter1;
+		}
+	}
+
+	@Override
+	public VHLFilterState getFiltering() {
+		return new ListTstFilter(filter1.getValue(), cbSearchBy.getValue());
+	}
+
+	@Override
+	public void setFiltering(VHLFilterState filtering) {
+		if (filtering == null)
+			return;
+		ListTstFilter lf = (ListTstFilter) filtering;
+		filter1.setValue(lf.getFilter1());
+		cbSearchBy.setValue(lf.getCbSearchBy());
+		setFilter();
+	}
+
 }
