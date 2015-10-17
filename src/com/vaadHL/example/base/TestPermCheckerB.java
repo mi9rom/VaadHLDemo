@@ -19,6 +19,7 @@ package com.vaadHL.example.base;
 import java.io.Serializable;
 import java.util.TreeMap;
 
+import com.vaadHL.IAppContext;
 import com.vaadHL.utl.action.ActionsIds;
 import com.vaadHL.window.base.perm.AbstractWinPermChecker;
 import com.vaadHL.window.base.perm.IWinPermChecker;
@@ -31,6 +32,13 @@ import com.vaadHL.window.base.perm.IWinPermFactory;
  *
  */
 public class TestPermCheckerB implements IWinPermFactory {
+
+	public TestPermCheckerB(IAppContext appContext) {
+		this();
+		this.appContext = appContext;
+	}
+
+	private IAppContext appContext;
 
 	/**
 	 * 
@@ -116,6 +124,15 @@ public class TestPermCheckerB implements IWinPermFactory {
 		public PermItemKey getKey() {
 			return new PermItemKey(winId, permId);
 		}
+
+		public String getPermission() {
+			return MyActionsIds.getName(appContext.getI18(), permId);
+		}
+
+		public String getWinIdShow() {
+			return winId;
+		}
+
 	}
 
 	TreeMap<PermItemKey, PermItem> container = new TreeMap<TestPermCheckerB.PermItemKey, TestPermCheckerB.PermItem>();

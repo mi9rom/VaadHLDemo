@@ -342,7 +342,7 @@ public class MainW extends VerticalLayout {
 		customizerFactory.put("M001", customizeFWin);
 
 		// ========== mock permissions =============
-		permissions = new TestPermCheckerB();
+		permissions = new TestPermCheckerB(appContext);
 		appContext.setWinPermFactory(permissions);
 
 		permissions.put("L001", MyActionsIds.MOCK_ID, false);
@@ -369,33 +369,31 @@ public class MainW extends VerticalLayout {
 		tPerm.setSelectable(false);
 		tPerm.setColumnReorderingAllowed(true);
 		tPerm.setColumnCollapsingAllowed(true);
+		
+		/*
+		 * tPerm.addGeneratedColumn("permission", new ColumnGenerator() {
+		 * private static final long serialVersionUID = 8174249667866723293L;
+		 * 
+		 * @Override public Object generateCell(Table source, Object itemId,
+		 * Object columnId) { Item itm = source.getItem(itemId); int acId =
+		 * (int) itm.getItemProperty("permId").getValue(); return
+		 * MyActionsIds.getName(appContext.getI18(), acId);
+		 * 
+		 * } });
+		 */
 
-		tPerm.addGeneratedColumn("permission", new ColumnGenerator() {
-			private static final long serialVersionUID = 8174249667866723293L;
-
-			@Override
-			public Object generateCell(Table source, Object itemId,
-					Object columnId) {
-				Item itm = source.getItem(itemId);
-				int acId = (int) itm.getItemProperty("permId").getValue();
-				return MyActionsIds.getName(appContext.getI18(), acId);
-
-			}
-		});
-
-		tPerm.addGeneratedColumn("winIdShow", new ColumnGenerator() {
-			private static final long serialVersionUID = 7789570007862946545L;
-
-			@Override
-			public Object generateCell(Table source, Object itemId,
-					Object columnId) {
-				Item itm = source.getItem(itemId);
-				String v = (String) itm.getItemProperty("winId").getValue();
-
-				return v;
-
-			}
-		});
+		/*
+		 * tPerm.addGeneratedColumn("winIdShow", new ColumnGenerator() { private
+		 * static final long serialVersionUID = 7789570007862946545L;
+		 * 
+		 * @Override public Object generateCell(Table source, Object itemId,
+		 * Object columnId) { Item itm = source.getItem(itemId); String v =
+		 * (String) itm.getItemProperty("winId").getValue();
+		 * 
+		 * return v;
+		 * 
+		 * } });
+		 */
 
 		tPerm.setTableFieldFactory(new TableFieldFactory() {
 			private static final long serialVersionUID = 7459048926545235356L;
@@ -406,12 +404,17 @@ public class MainW extends VerticalLayout {
 						itemId, propertyId, uiContext);
 				if ("enabled".equals(propertyId))
 					f.setCaption("");
+				else if ("permission".equals(propertyId))
+					f.setWidth("170px");
+				else if ("winIdShow".equals(propertyId))
+					f.setWidth("70px");
+
 				return f;
 			}
 		});
 
 		tPerm.setVisibleColumns("winIdShow", "permission", "enabled");
-		tPerm.setColumnWidth("winIdShow", 90);
+		tPerm.setColumnWidth("winIdShow", 80);
 		tPerm.setColumnWidth("permission", -1);
 		tPerm.setColumnWidth("enabled", 60);
 
