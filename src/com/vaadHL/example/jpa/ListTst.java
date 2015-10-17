@@ -39,7 +39,7 @@ import com.vaadHL.window.EM.LEMWindow;
 import com.vaadHL.window.base.BaseWindow;
 import com.vaadHL.window.base.MWLaunchMode;
 import com.vaadHL.window.base.perm.IWinPermChecker;
-import com.vaadHL.window.base.perm.MWinPermChecker;
+import com.vaadHL.window.base.perm.MasterSlavePermChecker;
 import com.vaadHL.window.customize.CustomizeFWin;
 import com.vaadHL.window.customize.ICustomizeLWMultiMode;
 import com.vaadin.data.Item;
@@ -63,21 +63,14 @@ public class ListTst extends LEMWindow {
 	private TextField tfDetail;
 	private ComboBox cbSearchBy;
 	private Button btGenPerm;
-	private CustomizeFWin customizeFWin;
-	private IWinPermChecker permFW;
 
-	public ListTst(IWinPermChecker permChecker,
-			ICustomizeLWMultiMode customize, ChoosingMode chooseMode,
-			boolean readOnly, EntityManager em, IAppContext appContext,
-			CustomizeFWin customizeFWin, IWinPermChecker permFW) {
-		super("L001", "List Window Title", permChecker, customize, chooseMode,
-				readOnly, em, appContext);
+	public ListTst(ChoosingMode chooseMode, boolean readOnly, EntityManager em,
+			IAppContext appContext) {
+		super("L001", "List Window Title", null, chooseMode,
+				readOnly, em, appContext,null);
 		// It is very important to include this
 		if (!approvedToOpen)
 			return;
-
-		this.customizeFWin = customizeFWin;
-		this.permFW = permFW;
 
 		setHeight("600px");
 		setWidth("800px");
@@ -262,9 +255,8 @@ public class ListTst extends LEMWindow {
 			if (rowId == null)
 				return null;
 		}
-		FormTst sub = new FormTst(new MWinPermChecker(getWinId(), permFW),
-				customizeFWin, launchModeMW, em, container, rowId,
-				getAppContext(), isReadOnlyWin());
+		FormTst sub = new FormTst(getPermChecker(), launchModeMW, em,
+				container, rowId, getAppContext(), isReadOnlyWin());
 		sub.setModal(true);
 		return sub;
 	}

@@ -25,10 +25,11 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import com.vaadHL.IAppContext;
+import com.vaadHL.example.base.CustomizerFactory;
 import com.vaadHL.example.base.MyActionsIds;
 import com.vaadHL.example.base.TestPermCheckerB;
-import com.vaadHL.example.base.Version;
 import com.vaadHL.example.base.TestPermCheckerB.PermItem;
+import com.vaadHL.example.base.Version;
 import com.vaadHL.i18n.I18Sup;
 import com.vaadHL.utl.helper.ComponentHelper;
 import com.vaadHL.utl.helper.ItemHelper;
@@ -116,8 +117,10 @@ public class MainW extends VerticalLayout {
 	protected CheckBox chkAutoRestore;
 	protected CheckBox chkAutoRestoreNCM;
 	protected CheckBox chkAutoRestoreChM;
-	
-	
+	protected CheckBox chkShowMenu;
+	protected CheckBox chkShowMenuNCM;
+	protected CheckBox chkShowMenuChM;
+
 	private static final long serialVersionUID = 438202101251810416L;
 	private static String PERS_UNIT = "OraTstJPA";
 	public static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
@@ -133,11 +136,10 @@ public class MainW extends VerticalLayout {
 	private volatile boolean disableListeners = false;
 	private I18Sup m;
 
-	
 	public MainW(final IAppContext appContext) {
 		super();
-		Design.read("MainDes.html",this);
-		
+		Design.read("MainDes.html", this);
+
 		this.appContext = appContext;
 		em = ENTITY_MANAGER_FACTORY.createEntityManager();
 		m = appContext.getI18();
@@ -196,10 +198,13 @@ public class MainW extends VerticalLayout {
 			}
 		});
 
+		CustomizerFactory customizerFactory = new CustomizerFactory();
+		appContext.setWinCustomizerFactory(customizerFactory);
 		// ========== list window customization =============
 
 		// no-choose mode
 		final LWCustomizeLM customizeLWNoCh = new LWCustomizeLM();
+
 		BeanItem<LWCustomizeLM> customizeLWNoChBI = new BeanItem<LWCustomizeLM>(
 				customizeLWNoCh);
 
@@ -207,6 +212,8 @@ public class MainW extends VerticalLayout {
 				.getItemProperty("autoSaveState"));
 		chkAutoRestoreNCM.setPropertyDataSource(customizeLWNoChBI
 				.getItemProperty("autoRestoreState"));
+		chkShowMenuNCM.setPropertyDataSource(customizeLWNoChBI
+				.getItemProperty("showMenu"));
 		chkDetails.setPropertyDataSource(customizeLWNoChBI
 				.getItemProperty("detailsFunc"));
 		chkAddRec.setPropertyDataSource(customizeLWNoChBI
@@ -245,6 +252,8 @@ public class MainW extends VerticalLayout {
 				.getItemProperty("autoSaveState"));
 		chkAutoRestoreChM.setPropertyDataSource(customizeLWBIChMo
 				.getItemProperty("autoRestoreState"));
+		chkShowMenuChM.setPropertyDataSource(customizeLWBIChMo
+				.getItemProperty("showMenu"));
 		chkDetailsChM.setPropertyDataSource(customizeLWBIChMo
 				.getItemProperty("detailsFunc"));
 		chkAddRecChM.setPropertyDataSource(customizeLWBIChMo
@@ -273,16 +282,19 @@ public class MainW extends VerticalLayout {
 
 		final LWCustomize customizeLW = new LWCustomize(customizeLWChMo,
 				customizeLWNoCh);
+		customizerFactory.put("L001", customizeLW);
 
 		// ========== form window customization =============
 		customizeFWin = new CustomizeFWin();
 		final BeanItem<CustomizeFWin> customizeFWinBI = new BeanItem<CustomizeFWin>(
 				customizeFWin);
-		
+
 		chkAutoSave.setPropertyDataSource(customizeFWinBI
 				.getItemProperty("autoSaveState"));
 		chkAutoRestore.setPropertyDataSource(customizeFWinBI
 				.getItemProperty("autoRestoreState"));
+		chkShowMenu.setPropertyDataSource(customizeFWinBI
+				.getItemProperty("showMenu"));
 		chkAskCreate.setPropertyDataSource(customizeFWinBI
 				.getItemProperty("askCreate"));
 		chkAskDelete.setPropertyDataSource(customizeFWinBI
@@ -327,8 +339,12 @@ public class MainW extends VerticalLayout {
 			}
 		});
 
+		customizerFactory.put("M001", customizeFWin);
+
 		// ========== mock permissions =============
 		permissions = new TestPermCheckerB();
+		appContext.setWinPermFactory(permissions);
+
 		permissions.put("L001", MyActionsIds.MOCK_ID, false);
 
 		BeanContainer<String, PermItem> permContainer = new BeanContainer<String, PermItem>(
@@ -408,9 +424,8 @@ public class MainW extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 
-				ListTst sub = new ListTst(permissions, customizeLW,
-						listChoosingMode, listReadOnly, em, appContext,
-						customizeFWin, permissions);
+				ListTst sub = new ListTst(listChoosingMode, listReadOnly, em,
+						appContext);
 
 				sub.addCloseListener(new CloseListener() {
 
@@ -424,6 +439,8 @@ public class MainW extends VerticalLayout {
 
 						CloseCause clcs = ((BaseListWindow) e.getSource())
 								.getCloseCause();
+						if (clcs == null)
+							return;
 						Object items = clcs.addInfo;
 
 						switch (clcs.cause) {
@@ -518,6 +535,7 @@ public class MainW extends VerticalLayout {
 		lbCustomization.setValue(i18.getStringNE("lbCustomization"));
 		chkAutoSaveNCM.setCaption(i18.getStringNE("chkAutoSave"));
 		chkAutoRestoreNCM.setCaption(i18.getStringNE("chkAutoRestore"));
+		chkShowMenuNCM.setCaption(i18.getStringNE("chkShowMenu"));
 		chkDetails.setCaption(i18.getStringNE("chkDetails"));
 		chkAddRec.setCaption(i18.getStringNE("chkAddRec"));
 		chkDeleteRec.setCaption(i18.getStringNE("chkDeleteRec"));
@@ -527,6 +545,7 @@ public class MainW extends VerticalLayout {
 
 		chkAutoSaveChM.setCaption(i18.getStringNE("chkAutoSave"));
 		chkAutoRestoreChM.setCaption(i18.getStringNE("chkAutoRestore"));
+		chkShowMenuChM.setCaption(i18.getStringNE("chkShowMenu"));
 		chkDetailsChM.setCaption(i18.getStringNE("chkDetails"));
 		chkAddRecChM.setCaption(i18.getStringNE("chkAddRec"));
 		chkDeleteRecChM.setCaption(i18.getStringNE("chkDeleteRec"));
@@ -536,6 +555,7 @@ public class MainW extends VerticalLayout {
 
 		chkAutoSave.setCaption(i18.getStringNE("chkAutoSave"));
 		chkAutoRestore.setCaption(i18.getStringNE("chkAutoRestore"));
+		chkShowMenu.setCaption(i18.getStringNE("chkShowMenu"));
 		chkAskSave.setCaption(i18.getStringNE("chkAskSave"));
 		chkAskDiscard.setCaption(i18.getStringNE("chkAskDiscard"));
 		chkAskDelete.setCaption(i18.getStringNE("chkAskDelete"));
@@ -596,7 +616,6 @@ public class MainW extends VerticalLayout {
 		cbClosingMethod.setValue(val);
 
 		tPerm.refreshRowCache();
-		
 
 	}
 

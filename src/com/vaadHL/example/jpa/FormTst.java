@@ -45,13 +45,12 @@ public class FormTst extends SingIeItemFWindow {
 	@PropertyId("yearOfBirth")
 	private TextField tfYearOfBirth;
 
-	public FormTst(IWinPermChecker permChecker, CustomizeFWin customizeFWin,
-			MWLaunchMode launchMode, EntityManager em,
-			LazyEntityContainer<?> container, Object rowId,
+	public FormTst(IWinPermChecker masterPermChecker, MWLaunchMode launchMode,
+			EntityManager em, LazyEntityContainer<?> container, Object rowId,
 			IAppContext appContext, boolean readOnlyW) {
 
-		super("M001", "Form Window Title", permChecker, customizeFWin,
-				launchMode, em, container, rowId, appContext, readOnlyW);
+		super("M001", "Form Window Title", masterPermChecker, launchMode, em,
+				container, rowId, appContext, readOnlyW, null);
 
 		// It is very important to include this
 		if (!approvedToOpen)

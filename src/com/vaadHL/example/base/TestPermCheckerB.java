@@ -21,6 +21,8 @@ import java.util.TreeMap;
 
 import com.vaadHL.utl.action.ActionsIds;
 import com.vaadHL.window.base.perm.AbstractWinPermChecker;
+import com.vaadHL.window.base.perm.IWinPermChecker;
+import com.vaadHL.window.base.perm.IWinPermFactory;
 
 /**
  * Mock class simulating permission checking.
@@ -28,7 +30,7 @@ import com.vaadHL.window.base.perm.AbstractWinPermChecker;
  * @author Miroslaw Romaniuk
  *
  */
-public class TestPermCheckerB extends AbstractWinPermChecker {
+public class TestPermCheckerB implements IWinPermFactory {
 
 	/**
 	 * 
@@ -127,22 +129,12 @@ public class TestPermCheckerB extends AbstractWinPermChecker {
 		container.put(pi.getKey(), pi);
 	}
 
-	@Override
-	public boolean canDo(String winId, int actionId) {
-		PermItem pi = container.get(new PermItemKey(winId, actionId));
-		if (pi == null)
-			return false;
-		else
-			return pi.isEnabled();
-	}
-
 	void fillDefault(String winId) {
-
+		put(winId, ActionsIds.AC_OPEN, true);
 		put(winId, ActionsIds.AC_CREATE, true);
 		put(winId, ActionsIds.AC_DELETE, true);
 		put(winId, ActionsIds.AC_EDIT, true);
 		put(winId, ActionsIds.AC_NEXT_ITM, true);
-		put(winId, ActionsIds.AC_OPEN, true);
 		put(winId, ActionsIds.AC_PREV_ITM, true);
 	}
 
@@ -152,6 +144,37 @@ public class TestPermCheckerB extends AbstractWinPermChecker {
 		fillDefault("L001");
 		fillDefault("M001");
 
+	}
+
+	private boolean canDo(String winId, int actionId, boolean defValue) {
+		PermItem pi = container.get(new PermItemKey(winId, actionId));
+		if (pi == null)
+			return defValue;
+		else
+			return pi.isEnabled();
+	}
+
+	public class WinPermChecker extends AbstractWinPermChecker {
+
+		public WinPermChecker(String winId) {
+			super(winId);
+		}
+
+		@Override
+		public boolean canDo(int actionId, boolean defValue) {
+			return TestPermCheckerB.this.canDo(winId, actionId, defValue);
+		}
+
+		@Override
+		public boolean canDo(int actionId) {
+			return canDo(actionId, false);
+		}
+
+	}
+
+	@Override
+	public IWinPermChecker getChecker(String winId) {
+		return new WinPermChecker(winId);
 	}
 
 }
