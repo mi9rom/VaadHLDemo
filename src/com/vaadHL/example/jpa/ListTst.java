@@ -146,7 +146,7 @@ public class ListTst extends LEMWindow {
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				setFilter("", "");
+				applyFilter("", "");
 			}
 		});
 
@@ -160,7 +160,7 @@ public class ListTst extends LEMWindow {
 				 * nameFilterField.getValue(); dosn't get the current value ,
 				 * instead returns the last value after exiting the field
 				 */
-				setFilter("lastName", event.getText());
+				applyFilter("lastName", event.getText());
 			}
 		});
 
@@ -183,11 +183,11 @@ public class ListTst extends LEMWindow {
 
 	}
 
-	public void setFilter() {
-		setFilter("", "");
+	public void applyFilter() {
+		applyFilter("", "");
 	}
 
-	protected void setFilter(String field, Object val) {
+	protected void applyFilter(String field, Object val) {
 		final String nameFilter;
 		container.removeAllContainerFilters();
 
@@ -207,7 +207,6 @@ public class ListTst extends LEMWindow {
 				search = nameFilter + "%";
 			container.addContainerFilter(new Like("lastName", search));
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -323,7 +322,7 @@ public class ListTst extends LEMWindow {
 		ListTstFilter lf = (ListTstFilter) filtering;
 		filter1.setValue(lf.getFilter1());
 		cbSearchBy.setValue(lf.getCbSearchBy());
-		setFilter();
+		applyFilter();
 	}
 
 }
