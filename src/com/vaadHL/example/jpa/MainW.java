@@ -505,7 +505,7 @@ public class MainW extends VerticalLayout {
 
 						@Override
 						public void run() {
-							ui.getPage().setLocation("/VaadHLSite");
+							ui.getPage().setLocation("http://vaadhl.mromaniuk.me");
 						}
 					});
 				getSession().close();
