@@ -24,6 +24,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
+
 import com.vaadHL.IAppContext;
 import com.vaadHL.example.base.CustomizerFactory;
 import com.vaadHL.example.base.MyActionsIds;
@@ -138,6 +140,7 @@ public class MainW extends VerticalLayout {
 
 	public MainW(final IAppContext appContext) {
 		super();
+		
 		Design.read("MainDes.html", this);
 
 		this.appContext = appContext;
@@ -369,7 +372,7 @@ public class MainW extends VerticalLayout {
 		tPerm.setSelectable(false);
 		tPerm.setColumnReorderingAllowed(true);
 		tPerm.setColumnCollapsingAllowed(true);
-		
+
 		/*
 		 * tPerm.addGeneratedColumn("permission", new ColumnGenerator() {
 		 * private static final long serialVersionUID = 8174249667866723293L;
@@ -505,7 +508,8 @@ public class MainW extends VerticalLayout {
 
 						@Override
 						public void run() {
-							ui.getPage().setLocation("http://vaadhl.mromaniuk.me");
+							ui.getPage().setLocation(
+									"http://vaadhl.mromaniuk.me");
 						}
 					});
 				getSession().close();

@@ -20,6 +20,8 @@ import java.util.Locale;
 
 import javax.servlet.annotation.WebServlet;
 
+import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
+
 import com.vaadHL.AppContext;
 import com.vaadHL.example.i18n.MyI18;
 import com.vaadin.annotations.Theme;
@@ -44,8 +46,19 @@ public class AppMain extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
+
+		GoogleAnalyticsTracker tracker = new GoogleAnalyticsTracker(
+				"UA-71938697-2");
+
+		tracker.extend(this);
+		
+		
 		setLocale(Locale.getDefault());
 		setContent(new MainW(new AppContext(new MyI18(getLocale()))));
+		
+		 
+		tracker.trackPageview("MainW");
+
 	}
 
 }
